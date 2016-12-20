@@ -21,10 +21,11 @@ data2<-merge(open.only, data1)
 
 
 #do the anova using lm function
-result <- glm(cbind(total, Initial_count) ~ block + treatment * hours_since_deployment+offset(closed), data=data2, 
+result <- glm(cbind(total, Initial_count) ~ hours_since_deployment + treatment + 
+                block + (1+block:treatment)+offset(closed), data=data2, 
               family=binomial(link='logit'))
 result
 summary(result)
 aov(result)
 summary(aov(result))
-TukeyHSD(aov(result))
+
