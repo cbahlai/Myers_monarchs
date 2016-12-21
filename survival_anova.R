@@ -35,8 +35,11 @@ summary(aov(result))
 #here's some scratch code to work from, lifted from Safarzoda thesis
 
 
-anova(expt1.BCHO.model.12, test="Rao")
-with(expt1.2012, pairwise.t.test(BCHO, treatment, p.adjust.method="holm", paired=TRUE))
+anova(result, test="Rao")#analysis of deviance
+#need to create concatenated variable for interaction
+data2$hours.treatment<-paste(data2$treatment, ".", data2$hours_since_deployment)
+
+with(data2, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
 #compute summary stats for plotting
 expt.bcho.summary.12<-ddply(expt1.2012, .(year, day, treatment), summarize, 
                             N=length(BCHO.tiller),
