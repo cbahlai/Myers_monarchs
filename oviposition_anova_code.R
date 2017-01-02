@@ -46,14 +46,20 @@ oviposition.summary<-ddply(oviposition.avg, .(treatment, deployment), summarize,
                            mean=mean(monarch_eggs.mean),
                            sd   = sd(monarch_eggs.mean),
                            se   = sd / sqrt(N) )
+oviposition.summary.overall<-ddply(oviposition.avg, .(treatment), summarize,
+                           N=length(monarch_eggs.mean),
+                           mean=mean(monarch_eggs.mean),
+                           sd   = sd(monarch_eggs.mean),
+                           se   = sd / sqrt(N) )
 
 head(oviposition.summary)
 
 #make a bar plot with ggplot
+library(ggplot2)
 # Error bars represent standard error of the mean
 #cols is my personalized colour palette.
 cols <- c("gold2", "firebrick1", "yellowgreen", "mediumpurple", "dodgerblue2" )
-ggplot(oviposition.summary, aes(x=treatment, y=mean, fill=treatment)) + 
+ggplot(oviposition.summary.overall, aes(x=treatment, y=mean, fill=treatment)) + 
   geom_bar(position=position_dodge(), stat="identity", size=.3, fill=cols) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=.2, position=position_dodge(.9)) +
   scale_color_manual(values=cols)+
@@ -136,7 +142,7 @@ ggplot(oviposition.deployment3.summary, aes(x=treatment, y=mean, fill=treatment)
 #trying to facet it...
 cols <- c("gold2", "firebrick1", "yellowgreen", "mediumpurple", "dodgerblue2" )
 ggplot(oviposition.summary, aes(x=treatment, y=mean, fill=treatment)) + 
-  geom_bar(position=position_dodge(), stat="identity", size=.3, fill=cols) +
+  geom_bar(position=position_dodge(), stat="identity", size=.3, fill=) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=.2, position=position_dodge(.9)) +
   scale_color_manual(values=cols)+
   ylab("monarch eggs / plant obervation" )+
