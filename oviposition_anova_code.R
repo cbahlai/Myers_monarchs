@@ -196,11 +196,14 @@ ggplot(oviposition.deployment2.summary, aes(x=treatment, y=mean, fill=treatment)
 
 
 #faceted bar chart!
+as.factor(oviposition.summary$deployment)
+labels <- c("1" = "June", "2" = "July", "3" = "August")
+
 ggplot(oviposition.summary, aes(x=treatment, y=mean, fill=treatment)) + 
-  geom_bar(position=position_dodge(), stat="identity", size=.3, fill=cols) +
+  geom_bar(position=position_dodge(), stat="identity", size=.3, fill=cols, show.legend=TRUE) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=.2, position=position_dodge(.9)) +
   scale_color_manual(values=cols)+
   ylab("monarch eggs / plant obervation" )+
   ggtitle("Monarch Butterfly oviposition by Habitat with SE Bars") +
   theme(panel.background = element_blank())+
-  facet_wrap(~deployment)
+  facet_grid(~deployment, labeller=labeller(deployment = labels))
