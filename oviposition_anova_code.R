@@ -193,3 +193,14 @@ ggplot(oviposition.deployment2.summary, aes(x=treatment, y=mean, fill=treatment)
   ylab("monarch eggs / plant obervation" )+
   ggtitle("Monarch Butterfly oviposition.deployment2 by Habitat with SE Bars") +
   theme(panel.background = element_blank())
+
+
+#faceted bar chart!
+ggplot(oviposition.summary, aes(x=treatment, y=mean, fill=treatment)) + 
+  geom_bar(position=position_dodge(), stat="identity", size=.3, fill=cols) +
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=.2, position=position_dodge(.9)) +
+  scale_color_manual(values=cols)+
+  ylab("monarch eggs / plant obervation" )+
+  ggtitle("Monarch Butterfly oviposition by Habitat with SE Bars") +
+  theme(panel.background = element_blank())+
+  facet_wrap(~deployment)
