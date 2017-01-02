@@ -76,10 +76,14 @@ ggplot(oviposition.summary.overall, aes(x=treatment, y=mean, fill=treatment)) +
 
 
 #Doug asked me to redo the ANOVA with only the third egg check
+# this is where the most important separations will be observed- sample sizes were very low in first two
 oviposition.deployment3<-subset(oviposition, deployment==3)
 
 #install and use the ddply function to average across subsamples (individual plants within plant patches)
-oviposition.deployment3.avg <-ddply(oviposition.deployment3, .(treatment, date, time, block), summarize, monarch_eggs.mean=mean(monarch_eggs))
+oviposition.deployment3.avg <-ddply(oviposition.deployment3, .(treatment, date, time, block), summarize, 
+                                    monarch_eggs.mean=mean(monarch_eggs),
+                                    monarch_eggs.sum=sum(monarch_eggs),
+                                    nplants=length(monarch_eggs))
 
 #make block, date, and time into a factor
 oviposition.deployment3.avg$block <- as.factor(oviposition.deployment3.avg$block)
@@ -87,7 +91,8 @@ oviposition.deployment3.avg$date <- as.factor(oviposition.deployment3.avg$date)
 oviposition.deployment3.avg$time <- as.factor(oviposition.deployment3.avg$time)
 
 #do the anova using glm function
-result.deployment3 <- glm(monarch_eggs.mean ~ block + treatment, data=oviposition.deployment3.avg)
+result.deployment3 <- glm(monarch_eggs.sum ~ block + treatment, offset=nplants, data=oviposition.deployment3.avg)
+summary(result.deployment3)
 aov(result.deployment3)
 summary(aov(result.deployment3))
 TukeyHSD(aov(result.deployment3))
@@ -98,19 +103,33 @@ plotmeans(monarch_eggs.mean~treatment,xlab="Habitat Treatment",
           ylab="Mean Eggs/Plant Obs", main="Mean Plot Across Entire Field Season\nwith 95% CI", data=oviposition.deployment3.avg)
 
 #make date and time variables factors
-as.factor(oviposition.deployment3.avg$date)
-as.factor(oviposition.deployment3.avg$time)
+oviposition.deployment3.avg$date<-as.factor(oviposition.deployment3.avg$date)
+oviposition.deployment3.avg$time<-as.factor(oviposition.deployment3.avg$time)
+oviposition.deployment3.avg$block<-as.factor(oviposition.deployment3.avg$block)
 
-#rerun anova with date and time as covariates
-result_covariates.deployment3 <- glm(monarch_eggs.mean ~ block + treatment + date + time, data=oviposition.deployment3.avg)
+#rerun anova with appropriate data as factors, with sum of eggs as response variable
+result_covariates.deployment3 <- glm(monarch_eggs.sum ~ block + treatment, offset=nplants, data=oviposition.deployment3.avg)
+summary(result_covariates.deployment3)
 aov(result_covariates.deployment3)
 summary(aov(result_covariates.deployment3))
 TukeyHSD(aov(result_covariates.deployment3))
 #rerun this with poisson distribution
-result_covariates.deployment3.poisson <- glm(monarch_eggs.mean ~ block + treatment + date + time, data=oviposition.deployment3.avg, family = poisson())
+result_covariates.deployment3.poisson <- glm(monarch_eggs.sum ~ block + treatment, offset=nplants, data=oviposition.deployment3.avg, family = "poisson")
+summary(result_covariates.deployment3.poisson)
 aov(result_covariates.deployment3.poisson)
 summary(aov(result_covariates.deployment3.poisson))
 TukeyHSD(aov(result_covariates.deployment3.poisson))
+#residual deviance is high. Switch to a negative binomial model
+library(pscl)
+
+result_covariates.deployment3.nb <- glm.nb(monarch_eggs.sum ~ block + treatment +offset(nplants), data=oviposition.deployment3.avg)
+summary(result_covariates.deployment3.nb)
+aov(result_covariates.deployment3.nb)
+summary(aov(result_covariates.deployment3.nb))
+#need a holm-adjusted t-test here because Tukey doesn't work with NB models
+
+TukeyHSD(aov(result_covariates.deployment3.nb))
+
 
 #need to use ddply to compute summary stats for plotting
 

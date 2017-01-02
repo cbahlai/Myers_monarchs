@@ -26,12 +26,9 @@ result <- glm(cbind(total, Initial_count) ~ hours_since_deployment + treatment +
               family=binomial(link='logit'))
 result
 summary(result)
-aov(result)
-summary(aov(result))
-#tukey test is not going to work because of model structure. 
-#posthoc test should be a Holm-adjusted t instead
 
-#also, let's redo the anova as an AoD becuase of data structure 
+
+#also, let's do anova as an AoD becuase of data structure 
 #here's some scratch code to work from, lifted from Safarzoda thesis
 
 
@@ -124,7 +121,7 @@ ggplot2<- ggplot(data2.summary,
           geom_ribbon(aes(ymin=mean-se, ymax=mean+se, alpha=1/2))+
           scale_colour_manual(values=cols)+ 
           scale_fill_manual(values=cols)+
-          geom_line(colors=cols, size=1)+
+          geom_line(size=1)+
           xlab("Hours Since Deployment")+
           ylab("Surviving")
         
@@ -139,7 +136,7 @@ ggplot.closed<- ggplot(data2.summary.closed,
   geom_ribbon(aes(ymin=mean-se, ymax=mean+se, alpha=1/2))+
   scale_colour_manual(values=cols)+ 
   scale_fill_manual(values=cols)+
-  geom_line(colors=cols, size=1)+
+  geom_line(size=1)+
   xlab("Hours Since Deployment")+
   ylab("Surviving")
 
@@ -152,7 +149,7 @@ ggplot.sham<- ggplot(data2.summary.sham,
   geom_ribbon(aes(ymin=mean-se, ymax=mean+se, alpha=1/2))+
   scale_colour_manual(values=cols)+ 
   scale_fill_manual(values=cols)+
-  geom_line(colors=cols, size=1)+
+  geom_line(size=1)+
   xlab("Hours Since Deployment")+
   ylab("Surviving")
 
