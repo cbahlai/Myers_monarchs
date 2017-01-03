@@ -129,8 +129,6 @@ ggplot(oviposition.deployment3.summary, aes(x=treatment, y=mean, fill=treatment)
   theme(panel.background = element_blank())
 
 #faceted bar chart!
-
-as.factor(oviposition.summary$deployment)
 labels <- c("1" = "June", "2" = "July", "3" = "August") #make labeller
 
 ggplot(oviposition.summary, aes(x=treatment, y=mean, colour=treatment)) + 
