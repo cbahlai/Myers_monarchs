@@ -20,7 +20,7 @@ open.only$exclosure_treatment<-NULL
 data2<-merge(open.only, data1)
 
 
-#do the anova using lm function
+#do the anova using glm function
 result <- glm(cbind(total, Initial_count) ~ hours_since_deployment + treatment + 
                 block + (1+block:treatment)+offset(closed), data=data2, 
               family=binomial(link='logit'))
