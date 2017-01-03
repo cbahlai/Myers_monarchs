@@ -24,23 +24,23 @@ summary(aov(result))
 TukeyHSD(aov(result))
 
 #rerun anova with appropriate data as factors, with sum of eggs as response variable
-result_covariates <- glm(monarch_eggs.sum ~ block + treatment, offset=nplants, data=oviposition.avg)
+result_covariates <- glm(monarch_eggs.sum ~ block + treatment+deployment, offset=nplants, data=oviposition.avg)
 summary(result_covariates)
-aov(result_covariates)
-summary(aov(result_covariates))
-TukeyHSD(aov(result_covariates))
+anova(result_covariates) #use anova rather than AOV because it handles GLM better
+summary(anova(result_covariates))
+TukeyHSD(aov(result_covariates)) #Tukey only works with aov function
 #rerun this with poisson distribution
-result_covariates.poisson <- glm(monarch_eggs.sum ~ block + treatment, offset=nplants, data=oviposition.avg, family = "poisson")
+result_covariates.poisson <- glm(monarch_eggs.sum ~ block + treatment+deployment, offset=nplants, data=oviposition.avg, family = "poisson")
 summary(result_covariates.poisson)
-aov(result_covariates.poisson)
-summary(aov(result_covariates.poisson))
-TukeyHSD(aov(result_covariates.poisson))
-#residual deviance is high. Switch to a negative binomial model
+anova(result_covariates.poisson, test="Rao")
+summary(anova(result_covariates.poisson, test="Rao"))
+#skip pairwise comparisons- do this only for NB model
+#Test fit with negative binomial model
 library(pscl)
-result_covariates.nb <- glm.nb(monarch_eggs.sum ~ block + treatment +offset(nplants), data=oviposition.avg)
+result_covariates.nb <- glm.nb(monarch_eggs.sum ~ block + treatment +deployment+offset(nplants), data=oviposition.avg)
 summary(result_covariates.nb)
-aov(result_covariates.nb)
-summary(aov(result_covariates.nb))
+anova(result_covariates.nb, test="Rao")
+summary(anova(result_covariates.nb, test="Rao"))
 #need a holm-adjusted t-test here because Tukey doesn't work with NB models
 with(oviposition.avg, pairwise.t.test(monarch_eggs.sum, treatment, p.adjust.method="holm"))
 
@@ -76,33 +76,14 @@ oviposition.deployment3.avg<- subset(oviposition.avg, deployment==3)
 #Doug asked me to redo the ANOVA with only the third egg check
 # this is where the most important separations will be observed- sample sizes were very low in first two
 oviposition.deployment3.avg<- subset(oviposition.avg, deployment==3)
+#since we used a NB model for the whole dataset, let's just dive right in with an NB on the subset
 
-#do the anova using glm function
-result.deployment3 <- glm(monarch_eggs.sum ~ block + treatment, offset=nplants, data=oviposition.deployment3.avg)
-summary(result.deployment3)
-aov(result.deployment3)
-summary(aov(result.deployment3))
-TukeyHSD(aov(result.deployment3))
-
-#rerun anova with appropriate data as factors, with sum of eggs as response variable
-result_covariates.deployment3 <- glm(monarch_eggs.sum ~ block + treatment, offset=nplants, data=oviposition.deployment3.avg)
-summary(result_covariates.deployment3)
-aov(result_covariates.deployment3)
-summary(aov(result_covariates.deployment3))
-TukeyHSD(aov(result_covariates.deployment3))
-#rerun this with poisson distribution
-result_covariates.deployment3.poisson <- glm(monarch_eggs.sum ~ block + treatment, offset=nplants, data=oviposition.deployment3.avg, family = "poisson")
-summary(result_covariates.deployment3.poisson)
-aov(result_covariates.deployment3.poisson)
-summary(aov(result_covariates.deployment3.poisson))
-TukeyHSD(aov(result_covariates.deployment3.poisson))
-#residual deviance is high. Switch to a negative binomial model
 library(pscl)
 
 result_covariates.deployment3.nb <- glm.nb(monarch_eggs.sum ~ block + treatment +offset(nplants), data=oviposition.deployment3.avg)
 summary(result_covariates.deployment3.nb)
-aov(result_covariates.deployment3.nb)
-summary(aov(result_covariates.deployment3.nb))
+anova(result_covariates.deployment3.nb, test="Rao")
+summary(anova(result_covariates.deployment3.nb, test="Rao"))
 #need a holm-adjusted t-test here because Tukey doesn't work with NB models
 with(oviposition.deployment3.avg, pairwise.t.test(monarch_eggs.sum, treatment, p.adjust.method="holm"))
 
