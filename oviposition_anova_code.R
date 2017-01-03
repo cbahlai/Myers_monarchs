@@ -42,6 +42,7 @@ summary(result_covariates.nb)
 aov(result_covariates.nb)
 summary(aov(result_covariates.nb))
 #need a holm-adjusted t-test here because Tukey doesn't work with NB models
+with(oviposition.avg, pairwise.t.test(monarch_eggs.sum, treatment, p.adjust.method="holm"))
 
 #need to use ddply to compute summary stats for plotting
 #this one includes deployment number for faceting ggplot later
@@ -103,8 +104,7 @@ summary(result_covariates.deployment3.nb)
 aov(result_covariates.deployment3.nb)
 summary(aov(result_covariates.deployment3.nb))
 #need a holm-adjusted t-test here because Tukey doesn't work with NB models
-
-TukeyHSD(aov(result_covariates.deployment3.nb))
+with(oviposition.deployment3.avg, pairwise.t.test(monarch_eggs.sum, treatment, p.adjust.method="holm"))
 
 #need to use ddply to compute summary stats for plotting
 
