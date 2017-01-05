@@ -156,15 +156,13 @@ ggplot.sham<- ggplot(data2.summary.sham,
 
 ggplot.sham
 
-#spare code
-  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), colour="black", width=.2, position="dodge")+
-  geom_point(size=6, position="dodge")+
-  scale_color_manual(values = pal1, breaks=c("closed","bottom", "top", "open"))+
-  xlab("Hours Since Deployment")+
-  ylab("Surviving")+
-  theme_bw()+
-  geom_line(size=1, position="dodge")+
-  scale_shape_manual(values = shapepal, breaks=c("closed","bottom", "top", "open"))+
-  ggtitle("R. padi")
 
-
+ggplot(data2.summary, aes(x=treatment, y=mean, colour=treatment, fill=treatment)) + 
+  geom_bar(position=position_dodge(), stat="identity") +
+  scale_color_manual(values=cols)+
+  scale_fill_manual(values=cols)+
+  ylab("surviving")+
+  ggtitle("Monarch Survival by Treatment") +
+  theme(panel.background = element_blank(), axis.text.x = element_blank(),  axis.ticks = element_blank())+
+  facet_grid(~hours_since_deployment, )
+  
