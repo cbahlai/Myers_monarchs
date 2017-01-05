@@ -105,10 +105,13 @@ ggplot1<- ggplot(data2.summary,
           aes(x=data2.summary$hours_since_deployment, y=mean, colour=treatment, shape=treatment)) +
           scale_color_manual(values=cols)+
           geom_point()+
-          geom_line()+
+          geom_line(size=1.5)+
           geom_errorbar(aes(ymin=mean-se, ymax=mean+se), colour="black", width=.2, position="dodge")+
           xlab("Hours Since Deployment")+
-          ylab("Surviving")
+          ylab("Surviving")+
+          theme(text = element_text(size=14))+
+          scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))
+        
 #view the plot
 ggplot1
 
@@ -121,9 +124,10 @@ ggplot2<- ggplot(data2.summary,
           geom_ribbon(aes(ymin=mean-se, ymax=mean+se, alpha=1/2))+
           scale_colour_manual(values=cols)+ 
           scale_fill_manual(values=cols)+
-          geom_line(size=1)+
+          geom_line(size=1.5)+
           xlab("Hours Since Deployment")+
-          ylab("Surviving")
+          ylab("Surviving")+
+          scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))
         
 
 ggplot2
@@ -136,10 +140,11 @@ ggplot.closed<- ggplot(data2.summary.closed,
   geom_ribbon(aes(ymin=mean-se, ymax=mean+se, alpha=1/2))+
   scale_colour_manual(values=cols)+ 
   scale_fill_manual(values=cols)+
-  geom_line(size=1)+
+  geom_line(size=1.5)+
   xlab("Hours Since Deployment")+
-  ylab("Surviving")
-
+  ylab("Surviving")+
+  theme(text = element_text(size=14))+
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))
 
 ggplot.closed
 
@@ -149,9 +154,11 @@ ggplot.sham<- ggplot(data2.summary.sham,
   geom_ribbon(aes(ymin=mean-se, ymax=mean+se, alpha=1/2))+
   scale_colour_manual(values=cols)+ 
   scale_fill_manual(values=cols)+
-  geom_line(size=1)+
+  geom_line(size=1.5)+
   xlab("Hours Since Deployment")+
-  ylab("Surviving")
+  ylab("Surviving")+
+  theme(text = element_text(size=14))+
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))
 
 
 ggplot.sham
@@ -164,5 +171,7 @@ ggplot(data2.summary, aes(x=treatment, y=mean, colour=treatment, fill=treatment)
   ylab("surviving")+
   ggtitle("Monarch Survival by Treatment") +
   theme(panel.background = element_blank(), axis.text.x = element_blank(),  axis.ticks = element_blank())+
-  facet_grid(~hours_since_deployment, )
+  facet_grid(~hours_since_deployment)
+
+
   
