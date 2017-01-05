@@ -1,12 +1,12 @@
 #bring exp1.data in
 
-exp1.data<-read.csv(file="deployment1_csv.csv", header=TRUE)
-
-
 #during the first part of the experiment, I recorded the fates of eggs and larvae on individual plants 
 #(July 13-18). later, as they hatched and moved between plants (July 20 and on), I began to only 
-#record the number of individuals within the "patch" of three plants. 
+#record the number of individuals within the "patch" of three plants. In excel, I averaged across
+#the 3 plants for July 13-18 in each patch and then brought in the data into R.
 
+exp1.data<-read.csv(file="deployment1_excel_shaped_csv.csv", header=TRUE)
+exp1.data<-na.omit(exp1.data) #omit the na's, which included lots of empty spaces, which were artifacts from the excel manipulation
 
 #make block into a factor
 exp1.data$block <- as.factor(exp1.data$block)
@@ -49,37 +49,35 @@ with(exp1.data2, pairwise.t.test(surviving, hours.treatment, p.adjust.method="ho
 #need to do pairwise t-test only comparing within a given hours_since_deployment. I couldn't figure out how
 #to do it using a for loop, so I took the brute force approach for the time being
 
-hours.0<-subset(exp1.data2, hours_since_deployment==0)
-hours.6<-subset(exp1.data2, hours_since_deployment==6)
-hours.8<-subset(exp1.data2, hours_since_deployment==8)
-hours.11<-subset(exp1.data2, hours_since_deployment==11)
-hours.13<-subset(exp1.data2, hours_since_deployment==13)
-hours.19<-subset(exp1.data2, hours_since_deployment==19)
-hours.22<-subset(exp1.data2, hours_since_deployment==22)
-hours.26<-subset(exp1.data2, hours_since_deployment==26)
-hours.49<-subset(exp1.data2, hours_since_deployment==49)
-hours.71<-subset(exp1.data2, hours_since_deployment==71)
-hours.97<-subset(exp1.data2, hours_since_deployment==97)
-hours.145<-subset(exp1.data2, hours_since_deployment==145)
-hours.312<-subset(exp1.data2, hours_since_deployment==312)
-hours.480<-subset(exp1.data2, hours_since_deployment==480)
-hours.600<-subset(exp1.data2, hours_since_deployment==600)
+exp1.hours.0<-subset(exp1.data2, hours_since_deployment==0)
+exp1.hours.23<-subset(exp1.data2, hours_since_deployment==23)
+exp1.hours.25<-subset(exp1.data2, hours_since_deployment==25)
+exp1.hours.49<-subset(exp1.data2, hours_since_deployment==49)
+exp1.hours.70<-subset(exp1.data2, hours_since_deployment==70)
+exp1.hours.74<-subset(exp1.data2, hours_since_deployment==74)
+exp1.hours.94<-subset(exp1.data2, hours_since_deployment==94)
+exp1.hours.143<-subset(exp1.data2, hours_since_deployment==143)
+exp1.hours.193<-subset(exp1.data2, hours_since_deployment==193)
+exp1.hours.238<-subset(exp1.data2, hours_since_deployment==238)
+exp1.hours.311<-subset(exp1.data2, hours_since_deployment==311)
+exp1.hours.361<-subset(exp1.data2, hours_since_deployment==361)
+exp1.hours.406<-subset(exp1.data2, hours_since_deployment==406)
+exp1.hours.528<-subset(exp1.data2, hours_since_deployment==528)
 
-with(hours.0, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.6, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.8, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.11, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.13, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.19, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.22, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.26, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.49, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.71, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.97, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.145, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.312, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.480, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.600, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
+with(exp1.hours.0, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
+with(exp1.hours.23, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
+with(exp1.hours.25, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
+with(exp1.hours.49, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
+with(exp1.hours.70, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
+with(exp1.hours.74, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
+with(exp1.hours.94, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
+with(exp1.hours.143, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
+with(exp1.hours.193, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
+with(exp1.hours.238, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
+with(exp1.hours.311, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
+with(exp1.hours.361, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
+with(exp1.hours.406, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
+with(exp1.hours.528, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
 
 
 #load library(ddply) compute summary stats for plotting
@@ -105,7 +103,7 @@ exp1.data2.summary.sham<-ddply(exp1.data2, .(hours_since_deployment, treatment),
 #creating the plot!
 
 #make my colour palette
-cols <- c("corn" = "gold2", "prairie" = "limegreen", "soy" = "mediumpurple", "fallow" = "firebrick1", "turf" ="dodgerblue2" )
+cols <- c("prairie" = "limegreen", "soy" = "mediumpurple")
 #load ggplot2
 library(ggplot2)
 #make the pot
