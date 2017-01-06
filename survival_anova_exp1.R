@@ -2,7 +2,7 @@
 
 #during the first part of the experiment, I recorded the fates of eggs and larvae on individual plants 
 #(July 13-18). later, as they hatched and moved between plants (July 20 and on), I began to only 
-#record the number of individuals within the "patch" of three plants. In excel, I averaged across
+#record the number of individuals within the "patch" of three plants. In excel, I summed across
 #the 3 plants for July 13-18 in each patch and then brought in the data into R.
 
 exp1.data<-read.csv(file="deployment1_excel_shaped_csv.csv", header=TRUE)
@@ -29,7 +29,7 @@ exp1.data2<-merge(exp1.open.only, exp1.data1)
 
 
 #do the anova using glm function
-exp1.result <- glm(cbind(total, Initial_count) ~ hours_since_deployment + treatment + 
+exp1.result <- glm(cbind(total, Initial_count) ~ hours_since_deployment*treatment + 
                 block + (1+block:treatment)+offset(closed), data=exp1.data2, 
               family=binomial(link='logit'))
 exp1.result
@@ -40,7 +40,7 @@ summary(exp1.result)
 #here's some scratch code to work from, lifted from Safarzoda thesis
 
 
-anova(result, test="Rao")#analysis of deviance
+anova(exp1.result, test="Rao")#analysis of deviance
 #need to create concatenated variable for interaction
 exp1.data2$hours.treatment<-paste(exp1.data2$treatment, ".", exp1.data2$hours_since_deployment)
 
@@ -49,35 +49,6 @@ with(exp1.data2, pairwise.t.test(surviving, hours.treatment, p.adjust.method="ho
 #need to do pairwise t-test only comparing within a given hours_since_deployment. I couldn't figure out how
 #to do it using a for loop, so I took the brute force approach for the time being
 
-exp1.hours.0<-subset(exp1.data2, hours_since_deployment==0)
-exp1.hours.23<-subset(exp1.data2, hours_since_deployment==23)
-exp1.hours.25<-subset(exp1.data2, hours_since_deployment==25)
-exp1.hours.49<-subset(exp1.data2, hours_since_deployment==49)
-exp1.hours.70<-subset(exp1.data2, hours_since_deployment==70)
-exp1.hours.74<-subset(exp1.data2, hours_since_deployment==74)
-exp1.hours.94<-subset(exp1.data2, hours_since_deployment==94)
-exp1.hours.143<-subset(exp1.data2, hours_since_deployment==143)
-exp1.hours.193<-subset(exp1.data2, hours_since_deployment==193)
-exp1.hours.238<-subset(exp1.data2, hours_since_deployment==238)
-exp1.hours.311<-subset(exp1.data2, hours_since_deployment==311)
-exp1.hours.361<-subset(exp1.data2, hours_since_deployment==361)
-exp1.hours.406<-subset(exp1.data2, hours_since_deployment==406)
-exp1.hours.528<-subset(exp1.data2, hours_since_deployment==528)
-
-with(exp1.hours.0, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(exp1.hours.23, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(exp1.hours.25, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(exp1.hours.49, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(exp1.hours.70, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(exp1.hours.74, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(exp1.hours.94, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(exp1.hours.143, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(exp1.hours.193, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(exp1.hours.238, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(exp1.hours.311, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(exp1.hours.361, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(exp1.hours.406, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(exp1.hours.528, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
 
 
 #load library(ddply) compute summary stats for plotting
