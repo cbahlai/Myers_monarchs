@@ -174,4 +174,38 @@ ggplot(data2.summary, aes(x=treatment, y=mean, colour=treatment, fill=treatment)
   facet_grid(~hours_since_deployment)
 
 
+
+
+
+#####Plots for presentation
+
+ggplot(data2.summary, 
+                 aes(x=data2.summary$hours_since_deployment, y=mean, colour=treatment, shape=treatment)) +
+  scale_color_manual(values=cols)+
+  geom_point()+
+  geom_line(size=1.5)+
+  theme(axis.text.x = element_text(face="bold", 
+                                   size=14),
+        axis.text.y = element_text(face="bold", size=14))
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))
+  
+ggplot(data2.summary.sham, 
+         aes(x=data2.summary$hours_since_deployment, y=mean, colour=treatment, shape=treatment)) +
+    scale_color_manual(values=cols)+
+    geom_point()+
+    geom_line(size=1.5)+
+    theme(axis.text.x = element_text(face="bold", 
+                                     size=14),
+          axis.text.y = element_text(face="bold", size=14))
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))
+  
+ggplot(data2.summary.closed, 
+         aes(x=data2.summary$hours_since_deployment, y=mean, colour=treatment, shape=treatment)) +
+    scale_color_manual(values=cols)+
+    geom_point()+
+    geom_line(size=1.5)+
+    theme(axis.text.x = element_text(face="bold", 
+                                     size=14),
+          axis.text.y = element_text(face="bold", size=14))
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))  
   

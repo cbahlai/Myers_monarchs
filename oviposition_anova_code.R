@@ -69,7 +69,7 @@ ggplot(oviposition.summary.overall, aes(x=treatment, y=mean, fill=treatment)) +
   scale_color_manual(values=cols)+
   ylab("monarch eggs / plant obervation" )+
   ggtitle("Monarch Butterfly oviposition by Habitat with SE Bars") +
-  theme(panel.background = element_blank())
+  theme(panel.background = element_blank(),)
 
 oviposition.deployment3.avg<- subset(oviposition.avg, deployment==3)
 
