@@ -164,6 +164,7 @@ ggplot.sham<- ggplot(data2.summary.sham,
 ggplot.sham
 
 
+#crazy faceted bar plot
 ggplot(data2.summary, aes(x=treatment, y=mean, colour=treatment, fill=treatment)) + 
   geom_bar(position=position_dodge(), stat="identity") +
   scale_color_manual(values=cols)+
@@ -179,14 +180,15 @@ ggplot(data2.summary, aes(x=treatment, y=mean, colour=treatment, fill=treatment)
 
 #####Plots for presentation
 
+cols <- c("corn" = "gold2", "prairie" = "yellowgreen", "soy" = "mediumpurple", "fallow" = "firebrick1", "turf" ="dodgerblue2" )
 ggplot(data2.summary, 
                  aes(x=data2.summary$hours_since_deployment, y=mean, colour=treatment, shape=treatment)) +
   scale_color_manual(values=cols)+
   geom_point()+
   geom_line(size=1.5)+
-  theme(axis.text.x = element_text(face="bold", 
+  theme(panel.background = element_blank(), axis.text.x = element_text(face="bold", 
                                    size=14),
-        axis.text.y = element_text(face="bold", size=14))
+        axis.text.y = element_text(face="bold", size=14))+
   scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))
   
 ggplot(data2.summary.sham, 
@@ -209,3 +211,43 @@ ggplot(data2.summary.closed,
           axis.text.y = element_text(face="bold", size=14))
   scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))  
   
+  
+  ##for presentation bar plots for individual times
+  ##subset the summary by time
+  data2.summary.6.open<-subset(data2.summary, hours_since_deployment==6)
+  data2.summary.13.open<-subset(data2.summary, hours_since_deployment==13)
+  data2.summary.26.open<-subset(data2.summary, hours_since_deployment==26)
+  data2.summary.49.open<-subset(data2.summary, hours_since_deployment==49)
+  
+  #make the plots
+  ggplot(data2.summary.6.open, aes(x=treatment, y=mean, colour=treatment, fill=treatment)) + 
+    geom_bar(position=position_dodge(), stat="identity") +
+    scale_color_manual(values=cols)+
+    scale_fill_manual(values=cols)+
+    ylab("surviving")+
+    ggtitle("6 Hours") +
+    theme(panel.background = element_blank(), axis.text.x = element_blank(),  axis.ticks = element_blank())
+  
+  ggplot(data2.summary.13.open, aes(x=treatment, y=mean, colour=treatment, fill=treatment)) + 
+    geom_bar(position=position_dodge(), stat="identity") +
+    scale_color_manual(values=cols)+
+    scale_fill_manual(values=cols)+
+    ylab("surviving")+
+    ggtitle("13 Hours") +
+    theme(panel.background = element_blank(), axis.text.x = element_blank(),  axis.ticks = element_blank()) 
+  
+  ggplot(data2.summary.26.open, aes(x=treatment, y=mean, colour=treatment, fill=treatment)) + 
+    geom_bar(position=position_dodge(), stat="identity") +
+    scale_color_manual(values=cols)+
+    scale_fill_manual(values=cols)+
+    ylab("surviving")+
+    ggtitle("26 Hours") +
+    theme(panel.background = element_blank(), axis.text.x = element_blank(),  axis.ticks = element_blank())
+  
+  ggplot(data2.summary.49.open, aes(x=treatment, y=mean, colour=treatment, fill=treatment)) + 
+    geom_bar(position=position_dodge(), stat="identity") +
+    scale_color_manual(values=cols)+
+    scale_fill_manual(values=cols)+
+    ylab("surviving")+
+    ggtitle("49 Hours") +
+    theme(panel.background = element_blank(), axis.text.x = element_blank(),  axis.ticks = element_blank())

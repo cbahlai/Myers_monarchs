@@ -107,7 +107,10 @@ ggplot(oviposition.deployment3.summary, aes(x=treatment, y=mean, fill=treatment)
   scale_color_manual(values=cols)+
   ylab("monarch eggs / plant obervation" )+
   ggtitle("Monarch Butterfly oviposition.deployment3 by Habitat with SE Bars") +
-  theme(panel.background = element_blank())
+  theme(panel.background = element_blank())+
+theme(panel.background = element_blank(), axis.text.x = element_text(face="bold", 
+                                                                     size=14),
+      axis.text.y = element_text(face="bold", size=14))
 
 #faceted bar chart!
 labels <- c("1" = "June", "2" = "July", "3" = "August") #make labeller

@@ -133,15 +133,58 @@ ggplot.sham<- ggplot(exp1.data2.summary.sham,
 
 ggplot.sham
 
-#spare code
-geom_errorbar(aes(ymin=mean-se, ymax=mean+se), colour="black", width=.2, position="dodge")+
-  geom_point(size=6, position="dodge")+
-  scale_color_manual(values = pal1, breaks=c("closed","bottom", "top", "open"))+
+
+
+####plots for presentation
+
+
+ggplot1<- ggplot(exp1.data2.summary, 
+                 aes(x=exp1.data2.summary$hours_since_deployment, y=mean, colour=treatment, shape=treatment)) +
+  scale_color_manual(values=cols)+
+  geom_point()+
+  geom_line(size=1)+
   xlab("Hours Since Deployment")+
   ylab("Surviving")+
-  theme_bw()+
-  geom_line(size=1, position="dodge")+
-  scale_shape_manual(values = shapepal, breaks=c("closed","bottom", "top", "open"))+
-  ggtitle("R. padi")
+  theme(axis.text.x = element_text(face="bold", 
+                                   size=14),
+        axis.text.y = element_text(face="bold", size=14))+
+scale_x_continuous(expand = c(0, 0), limits = c(0, 550))
+
+#view the plot
+ggplot1
+
+#make it for closed and sham
+
+ggplot.closed<- ggplot(exp1.data2.summary.closed, 
+                       aes(x=hours_since_deployment, y=mean, shape=treatment, colour=treatment, fill=treatment))+
+  geom_point()+
+  scale_colour_manual(values=cols)+ 
+  scale_fill_manual(values=cols)+
+  geom_line(size=1)+
+  xlab("Hours Since Deployment")+
+  ylab("Surviving")+
+  theme(axis.text.x = element_text(face="bold", 
+                                   size=14),
+        axis.text.y = element_text(face="bold", size=14))+
+scale_x_continuous(expand = c(0, 0), limits = c(0, 550))
 
 
+
+ggplot.closed
+
+ggplot.sham<- ggplot(exp1.data2.summary.sham, 
+                     aes(x=hours_since_deployment, y=mean, shape=treatment, colour=treatment, fill=treatment))+
+  geom_point()+
+  scale_colour_manual(values=cols)+ 
+  scale_fill_manual(values=cols)+
+  geom_line(size=1)+
+  xlab("Hours Since Deployment")+
+  ylab("Surviving")+
+  theme(axis.text.x = element_text(face="bold", 
+                                   size=14),
+        axis.text.y = element_text(face="bold", size=14))+
+scale_x_continuous(expand = c(0, 0), limits = c(0, 550))
+
+
+
+ggplot.sham
