@@ -18,60 +18,23 @@ open.only<-data[which(data$exclosure_treatment=="open"),]
 open.only$exclosure_treatment<-NULL
 
 data2<-merge(open.only, data1)
+#ok, let's do this as a linear mixed effects model. We have to also call some other packages if we want p values
+
+library(lmerTest)
 
 
 #do the anova using glm function
-result <- glm(cbind(total, Initial_count) ~ hours_since_deployment * treatment + 
-                block + (1+block:treatment)+offset(closed), data=data2, 
-              family=binomial(link='logit'))
+result <- lmer(total~ hours_since_deployment * treatment + (1|block:treatment), data=data2)
 result
 summary(result)
 
 
-#also, let's do anova as an AoD becuase of data structure 
-#here's some scratch code to work from, lifted from Safarzoda thesis
+#and an anova
 
-
-anova(result, test="Rao")#analysis of deviance
-#need to create concatenated variable for interaction
-data2$hours.treatment<-paste(data2$treatment, ".", data2$hours_since_deployment)
-
-with(data2, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-
-#need to do pairwise t-test only comparing within a given hours_since_deployment. I couldn't figure out how
-#to do it using a for loop, so I took the brute force approach for the time being
-
-hours.0<-subset(data2, hours_since_deployment==0)
-hours.6<-subset(data2, hours_since_deployment==6)
-hours.8<-subset(data2, hours_since_deployment==8)
-hours.11<-subset(data2, hours_since_deployment==11)
-hours.13<-subset(data2, hours_since_deployment==13)
-hours.19<-subset(data2, hours_since_deployment==19)
-hours.22<-subset(data2, hours_since_deployment==22)
-hours.26<-subset(data2, hours_since_deployment==26)
-hours.49<-subset(data2, hours_since_deployment==49)
-hours.71<-subset(data2, hours_since_deployment==71)
-hours.97<-subset(data2, hours_since_deployment==97)
-hours.145<-subset(data2, hours_since_deployment==145)
-hours.312<-subset(data2, hours_since_deployment==312)
-hours.480<-subset(data2, hours_since_deployment==480)
-hours.600<-subset(data2, hours_since_deployment==600)
-
-with(hours.0, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.6, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.8, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.11, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.13, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.19, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.22, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.26, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.49, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.71, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.97, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.145, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.312, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.480, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
-with(hours.600, pairwise.t.test(surviving, hours.treatment, p.adjust.method="holm"))
+anova(result)
+#analysis of random and fixed parts and post hoc
+#analysis of time and Treatment effects
+step(result)
 
 
 #load library(ddply) compute summary stats for plotting
