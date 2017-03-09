@@ -23,7 +23,7 @@ data2<-merge(open.only, data1)
 library(lmerTest)
 
 
-#do the anova using glm function
+#do the anova using lmer function
 result <- lmer(total~ hours_since_deployment * treatment + (1|block:treatment), data=data2)
 result
 summary(result)
@@ -35,6 +35,16 @@ anova(result)
 #analysis of random and fixed parts and post hoc
 #analysis of time and Treatment effects
 step(result)
+
+
+
+##
+###below is lots of plotting code
+
+
+
+
+
 
 
 #load library(ddply) compute summary stats for plotting
