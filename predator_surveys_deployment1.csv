@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 date,time,block,treatment,earwigs,coccin_adults,coccin_larvae,pres_ants,lacewing_larva,lacewing_adults,lw_egg,LL_fly,syrphid,par_wasp,pred_wasp,pentatomidae_ad_and_imm,spider,scorpionfly,lampyridae,cantharid_larva,harvestman,nabidae,slug
 13-Jul,12:51,1,soy,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 13-Jul,12:41,1,prairie,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
@@ -112,7 +111,7 @@ date,time,block,treatment,earwigs,coccin_adults,coccin_larvae,pres_ants,lacewing
 3-Aug,missing,3,soy,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 3-Aug,missing,4,prairie,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 3-Aug,missing,4,soy,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0
-=======
+=======,,,,,,,,,,,,,,,,,,,,,,
 date,time,block,treatment,earwigs,coccin_adults,coccin_larvae,pres_ants,lacewing_larva,lacewing_adults,lw_egg,LL_fly,syrphid,par_wasp,pred_wasp,pentatomidae_ad_and_imm,spider,scorpionfly,lampyridae,cantharid_larva,harvestman,nabidae,slug
 13-Jul,12:51,1,soy,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 13-Jul,12:41,1,prairie,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
@@ -226,4 +225,4 @@ date,time,block,treatment,earwigs,coccin_adults,coccin_larvae,pres_ants,lacewing
 3-Aug,missing,3,soy,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 3-Aug,missing,4,prairie,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 3-Aug,missing,4,soy,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0
->>>>>>> d92a4f6a64db4e69a0419157cdfd9be9eb9685a0
+>>>>>>> d92a4f6a64db4e69a0419157cdfd9be9eb9685a0,,,,,,,,,,,,,,,,,,,,,,
