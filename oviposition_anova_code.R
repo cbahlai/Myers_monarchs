@@ -155,8 +155,8 @@ oviposition2016.avg.2 <-ddply(oviposition2016.avg, .(treatment, date, block, dep
                               monarch_eggs.sum=sum(monarch_eggs.sum))
 
 #divide number of eggs seen in a day by average number of plants present that day
-oviposition2016.avg.2 <-ddply(oviposition2016.avg, .(treatment, date, block, deployment, monarch_eggs.sum, nplants), summarize,
-                              monarch_eggs.mean=monarch_eggs.sum/nplants)
+oviposition2016.avg.2 <-ddply(oviposition2016.avg.2, .(treatment, date, block, deployment, monarch_eggs.sum, nplants.mean), summarize,
+                              monarch_eggs.mean=monarch_eggs.sum/nplants.mean)
 
 
 #then, repeating as above, make block, date, deployment into factors (but not time this time)
@@ -248,8 +248,8 @@ oviposition2017.avg.2 <-ddply(oviposition2017.avg, .(treatment, date, block, dep
                               monarch_eggs.sum=sum(monarch_eggs.sum))
 
 #divide number of eggs seen in a day by average number of plants present that day
-oviposition2017.avg.2 <-ddply(oviposition2017.avg, .(treatment, date, block, deployment, monarch_eggs.sum, nplants), summarize,
-                              monarch_eggs.mean=monarch_eggs.sum/nplants)
+oviposition2017.avg.2 <-ddply(oviposition2017.avg.2, .(treatment, date, block, deployment, monarch_eggs.sum, nplants.mean), summarize,
+                              monarch_eggs.mean=monarch_eggs.sum/nplants.mean)
 
 
 #then, repeating as above, make block, date, deployment into factors (but not time this time)
@@ -311,12 +311,53 @@ library(ggplot2)
 # Error bars represent standard error of the mean
 #cols is my personalized colour palette. i can't get it to work any more, so i took out the argument
 
-cols <- c("gold2", "firebrick1", "yellowgreen", "mediumpurple", "dodgerblue2" )
-ggplot(oviposition2017.summary.overall, aes(x=treatment, y=mean, fill=treatment)) + 
-  geom_bar(position=position_dodge(), stat="identity", size=.3) +
+cols2017 <- c("gold2", "firebrick1", "yellowgreen", "mediumpurple" )
+ggplot(oviposition2017.summary.overall, aes(x=treatment, y=mean, colour=treatment)) + 
+  geom_bar(position=position_dodge(), stat="identity", size=.3, fill=cols2017) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=.2, position=position_dodge(.9)) +
-  scale_color_manual(values=cols)+
+  scale_color_manual(values=cols2017)+
   ylab("monarch eggs / plant obervation" )+
   ggtitle("Monarch Butterfly oviposition2017 by Habitat with SE Bars") +
   theme(panel.background = element_blank(), complete=FALSE)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+###### more ggplotting. can he make a faceted chart again? let's find out
+
+#faceted bar chart!
+labels <- c("1" = "June", "2" = "July", "3" = "August") #make labeller
+
+ggplot(oviposition2016.summary, aes(x=treatment, y=mean, colour=treatment)) + 
+  geom_bar(position=position_dodge(), stat="identity", size=.3, fill=cols) +
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), colour="black", width=.2, position=position_dodge(.9)) +
+  scale_color_manual(values=cols)+
+  ylab("monarch eggs / plant observation" )+
+  ggtitle("Monarch Butterfly oviposition2016 by Habitat with SE Bars") +
+  theme(panel.background = element_blank(), axis.text.x = element_blank(),  axis.ticks = element_blank())+
+  facet_grid(~deployment, labeller=labeller(deployment = labels))
+
+
+#for 2017
+cols2017 <- c("gold2", "firebrick1", "yellowgreen", "mediumpurple" )
+labels <- c("1" = "June", "2" = "July", "3" = "August") #make labeller
+
+ggplot(oviposition2017.summary, aes(x=treatment, y=mean, colour=treatment)) + 
+  geom_bar(position=position_dodge(), stat="identity", size=.3, fill=cols2017) +
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), colour="black", width=.2, position=position_dodge(.9)) +
+  scale_color_manual(values=cols2017)+
+  ylab("monarch eggs / plant observation" )+
+  ggtitle("Monarch Butterfly oviposition2017 by Habitat with SE Bars") +
+  theme(panel.background = element_blank(), axis.text.x = element_blank(),  axis.ticks = element_blank())+
+  facet_grid(~deployment, labeller=labeller(deployment = labels))
 
