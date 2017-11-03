@@ -217,13 +217,12 @@ library(ggplot2)
 #cols is my personalized colour palette. it doesn't seem to work any more
 
 cols <- c("gold2", "firebrick1", "yellowgreen", "mediumpurple", "dodgerblue2" )
-ggplot(oviposition2016.summary.overall, aes(x=treatment, y=mean, fill=treatment)) + 
-  geom_bar(position=position_dodge(), stat="identity", size=.3) +
-  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=.2, position=position_dodge(.9)) +
+ggplot(oviposition2016.summary.overall, aes(x=treatment, y=mean, colour=treatment)) + 
+  geom_bar(position=position_dodge(), stat="identity", size=.3, fill=cols) +
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=.2, position=position_dodge(.9), colour="black") +
   scale_color_manual(values=cols)+
-  ylab("monarch eggs / plant obervation" )+
-  ggtitle("Monarch Butterfly oviposition2016 by Habitat with SE Bars") +
-  theme(panel.background = element_blank(), complete=FALSE)
+  ylim(0,.1)+
+  theme(panel.background = element_blank(), text = element_text(size=20, colour = "black"), complete=FALSE)
 
 
 
@@ -314,11 +313,10 @@ library(ggplot2)
 cols2017 <- c("gold2", "firebrick1", "yellowgreen", "mediumpurple" )
 ggplot(oviposition2017.summary.overall, aes(x=treatment, y=mean, colour=treatment)) + 
   geom_bar(position=position_dodge(), stat="identity", size=.3, fill=cols2017) +
-  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=.2, position=position_dodge(.9)) +
+  ylim(0,.1)+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=.2, position=position_dodge(.9), colour="black") +
   scale_color_manual(values=cols2017)+
-  ylab("monarch eggs / plant obervation" )+
-  ggtitle("Monarch Butterfly oviposition2017 by Habitat with SE Bars") +
-  theme(panel.background = element_blank(), complete=FALSE)
+  theme(panel.background = element_blank(), text = element_text(size=20, colour = "black"), complete=FALSE)
 
 
 

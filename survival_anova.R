@@ -1,6 +1,6 @@
 #bring data in
 
-data<-read.csv(file="deployment2_csv.csv", header=TRUE)
+data<-read.csv(file="deployment2_2016_csv.csv", header=TRUE)
 
 #make block into a factor
 data$block <- as.factor(data$block)
@@ -224,3 +224,15 @@ ggplot(data2.summary.closed,
     ylab("surviving")+
     ggtitle("49 Hours") +
     theme(panel.background = element_blank(), axis.text.x = element_blank(),  axis.ticks = element_blank())
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
