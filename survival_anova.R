@@ -1,12 +1,17 @@
 #bring data in
 
-data<-read.csv(file="deployment2_2016_csv.csv", header=TRUE)
+data<-read.csv(file="deployment2_2016_notsmooth_csv.csv", header=TRUE)
+
+#drop turf and post 72 hour obs
+data <- data[ which(data$hours_since_deployment < 73 & data$treatment != 'turf'), ]
 
 #make block into a factor
 data$block <- as.factor(data$block)
 
 data$total<-rowSums(data[7:13])
 data$surviving<-data$total/data$Initial_count
+
+
 
 library(reshape2)
 

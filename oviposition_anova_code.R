@@ -10,7 +10,8 @@ oviposition2016.avg <-ddply(oviposition2016, .(treatment, date, time, block, dep
                                     monarch_eggs.sum=sum(monarch_eggs),
                                     nplants=length(monarch_eggs))
 #drop the turf treatment
-oviposition2016.avg<-oviposition2016.avg[1:884, 1:8]
+oviposition2016.avg<-oviposition2016.avg[ which(oviposition2016.avg$treatment != 'turf'), ]
+
 
 #make block, date, time, deployment into factors
 oviposition2016.avg$block <- as.factor(oviposition2016.avg$block)
@@ -64,7 +65,7 @@ oviposition2016.summary.overall<-ddply(oviposition2016.avg, .(treatment), summar
 library(ggplot2)
 # Error bars represent standard error of the mean
 #cols is my personalized colour palette.
-cols <- c("gold2", "firebrick1", "yellowgreen", "mediumpurple", "dodgerblue2" )
+cols <- c("gold2", "firebrick1", "yellowgreen", "mediumpurple")
 ggplot(oviposition2016.summary.overall, aes(x=treatment, y=mean, fill=treatment)) + 
   geom_bar(position=position_dodge(), stat="identity", size=.3, fill=cols) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=.2, position=position_dodge(.9)) +
@@ -102,7 +103,7 @@ head(oviposition2016.deployment3.summary)
 #make a bar plot with ggplot
 # Error bars represent standard error of the mean
 #cols is my personalized colour palette.
-cols <- c("gold2", "firebrick1", "yellowgreen", "mediumpurple", "dodgerblue2" )
+cols <- c("gold2", "firebrick1", "yellowgreen", "mediumpurple")
 ggplot(oviposition2016.deployment3.summary, aes(x=treatment, y=mean, fill=treatment)) + 
   geom_bar(position=position_dodge(), stat="identity", size=.3, fill=cols) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=.2, position=position_dodge(.9)) +
@@ -218,7 +219,7 @@ library(ggplot2)
 # Error bars represent standard error of the mean
 #cols is my personalized colour palette. it doesn't seem to work any more
 
-cols <- c("gold2", "firebrick1", "yellowgreen", "mediumpurple", "dodgerblue2" )
+cols <- c("gold2", "firebrick1", "yellowgreen", "mediumpurple")
 ggplot(oviposition2016.summary.overall, aes(x=treatment, y=mean, colour=treatment)) + 
   geom_bar(position=position_dodge(), stat="identity", size=.3, fill=cols) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=.2, position=position_dodge(.9), colour="black") +

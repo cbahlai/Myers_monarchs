@@ -4,7 +4,7 @@ data<-read.csv(file="deployment1_2017_smooth_csv.csv", header=TRUE)
 data<-na.omit(data)
 
 #drop all observations past 72 hours
-data<-data[1:720,1:14]
+data <- data[ which(data$hours_since_deployment < 80), ]
 
 #make block into a factor
 data$block <- as.factor(data$block)
@@ -59,7 +59,7 @@ data2.summary<-ddply(data2, .(hours_since_deployment, treatment), summarize,
                      sd   = sd(surviving),
                      se   = sd / sqrt(N) )
 
-data2.summary.closed<-ddply(data2, .(hours_since_deployment, treatment), summarize,
+data2.summary.close<-ddply(data2, .(hours_since_deployment, treatment), summarize,
                             N=length(close),
                             mean=mean(close),
                             sd   = sd(close),
@@ -109,9 +109,9 @@ ggplot2<- ggplot(data2.summary,
 
 ggplot2
 
-#make it for closed and sham
+#make it for close and sham
 
-ggplot.closed<- ggplot(data2.summary.closed, 
+ggplot.close<- ggplot(data2.summary.close, 
                        aes(x=hours_since_deployment, y=mean, shape=treatment, colour=treatment, fill=treatment))+
   geom_point()+
   geom_ribbon(aes(ymin=mean-se, ymax=mean+se, alpha=1/2))+
@@ -123,7 +123,7 @@ ggplot.closed<- ggplot(data2.summary.closed,
   theme(text = element_text(size=14))+
   scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))
 
-ggplot.closed
+ggplot.close
 
 ggplot.sham<- ggplot(data2.summary.sham, 
                      aes(x=hours_since_deployment, y=mean, shape=treatment, colour=treatment, fill=treatment))+
@@ -223,10 +223,10 @@ data2.summary<-ddply(data2, .(hours_since_deployment, treatment), summarize,
                      sd   = sd(surviving),
                      se   = sd / sqrt(N) )
 
-data2.summary.closed<-ddply(data2, .(hours_since_deployment, treatment), summarize,
-                            N=length(closed),
-                            mean=mean(closed),
-                            sd   = sd(closed),
+data2.summary.close<-ddply(data2, .(hours_since_deployment, treatment), summarize,
+                            N=length(close),
+                            mean=mean(close),
+                            sd   = sd(close),
                             se   = sd / sqrt(N) )
 
 data2.summary.sham<-ddply(data2, .(hours_since_deployment, treatment), summarize,
@@ -258,7 +258,7 @@ ggplot1
 
 
 #cooler ggplot 
-cols <- c("corn" = "gold2", "prairie" = "limegreen", "soy" = "mediumpurple", "bare" = "firebrick1",)
+cols <- c("corn" = "gold2", "prairie" = "limegreen", "soy" = "mediumpurple", "bare" = "firebrick1")
 ggplot2<- ggplot(data2.summary, 
                  aes(x=hours_since_deployment, y=mean, shape=treatment, colour=treatment, fill=treatment))+
   geom_point()+
@@ -273,9 +273,9 @@ ggplot2<- ggplot(data2.summary,
 
 ggplot2
 
-#make it for closed and sham
+#make it for close and sham
 
-ggplot.closed<- ggplot(data2.summary.closed, 
+ggplot.close<- ggplot(data2.summary.close, 
                        aes(x=hours_since_deployment, y=mean, shape=treatment, colour=treatment, fill=treatment))+
   geom_point()+
   geom_ribbon(aes(ymin=mean-se, ymax=mean+se, alpha=1/2))+
@@ -287,7 +287,7 @@ ggplot.closed<- ggplot(data2.summary.closed,
   theme(text = element_text(size=14))+
   scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))
 
-ggplot.closed
+ggplot.close
 
 ggplot.sham<- ggplot(data2.summary.sham, 
                      aes(x=hours_since_deployment, y=mean, shape=treatment, colour=treatment, fill=treatment))+
