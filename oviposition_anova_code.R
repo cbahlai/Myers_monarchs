@@ -9,6 +9,8 @@ oviposition2016.avg <-ddply(oviposition2016, .(treatment, date, time, block, dep
                                     monarch_eggs.mean=mean(monarch_eggs),
                                     monarch_eggs.sum=sum(monarch_eggs),
                                     nplants=length(monarch_eggs))
+#drop the turf treatment
+oviposition2016.avg<-oviposition2016.avg[1:884, 1:8]
 
 #make block, date, time, deployment into factors
 oviposition2016.avg$block <- as.factor(oviposition2016.avg$block)

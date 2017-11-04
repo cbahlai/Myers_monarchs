@@ -3,7 +3,8 @@
 data<-read.csv(file="deployment1_2017_smooth_csv.csv", header=TRUE)
 data<-na.omit(data)
 
-
+#drop all observations past 72 hours
+data<-data[1:720,1:14]
 
 #make block into a factor
 data$block <- as.factor(data$block)
@@ -59,9 +60,9 @@ data2.summary<-ddply(data2, .(hours_since_deployment, treatment), summarize,
                      se   = sd / sqrt(N) )
 
 data2.summary.closed<-ddply(data2, .(hours_since_deployment, treatment), summarize,
-                            N=length(closed),
-                            mean=mean(closed),
-                            sd   = sd(closed),
+                            N=length(close),
+                            mean=mean(close),
+                            sd   = sd(close),
                             se   = sd / sqrt(N) )
 
 data2.summary.sham<-ddply(data2, .(hours_since_deployment, treatment), summarize,
@@ -166,7 +167,8 @@ ggplot(data2.summary, aes(x=treatment, y=mean, colour=treatment, fill=treatment)
 data<-read.csv(file="deployment2_2017_smooth_csv.csv", header=TRUE)
 data<-na.omit(data)
 
-
+#drop everything after 72 hours
+data<-data[1:671,1:14]
 
 #make block into a factor
 data$block <- as.factor(data$block)
