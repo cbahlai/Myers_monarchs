@@ -29,7 +29,7 @@ library(lmerTest)
 
 
 #do the anova using lmer function
-result <- lmer(total~ hours_since_deployment * treatment + (1|block:treatment), data=data2)
+result <- lmer(total~ hours_since_deployment * treatment + (1|block:treatment) + offset = closed, data=data2)
 result
 summary(result)
 
@@ -45,6 +45,17 @@ step(result)
 
 ##
 ###below is lots of plotting code
+
+
+
+
+
+
+
+
+
+
+
 
 
 
