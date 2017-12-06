@@ -5,7 +5,7 @@
 #record the number of individuals within the "patch" of three plants. In excel, I summed across
 #the 3 plants for July 13-18 in each patch and then brought in the data into R.
 
-exp1.data<-read.csv(file="deployment1_excel_shaped_2016_csv.csv", header=TRUE)
+exp1.data<-read.csv(file="deployment1_excel_shaped_csv.csv", header=TRUE)
 exp1.data<-na.omit(exp1.data) #omit the na's, which included lots of empty spaces, which were artifacts from the excel manipulation
 
 #make block into a factor
