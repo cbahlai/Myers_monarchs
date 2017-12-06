@@ -9,6 +9,7 @@ oviposition2016.avg <-ddply(oviposition2016, .(treatment, date, time, block, dep
                                     monarch_eggs.mean=mean(monarch_eggs),
                                     monarch_eggs.sum=sum(monarch_eggs),
                                     nplants=length(monarch_eggs))
+
 #drop the turf treatment
 oviposition2016.avg<-oviposition2016.avg[ which(oviposition2016.avg$treatment != 'turf'), ]
 
@@ -33,14 +34,14 @@ anova(result_covariates) #use anova rather than AOV because it handles GLM bette
 summary(anova(result_covariates))
 TukeyHSD(aov(result_covariates)) #Tukey only works with aov function
 #rerun this with poisson distribution
-result_covariates.poisson <- glm(monarch_eggs.sum ~ block + treatment+deployment, offset=nplants, data=oviposition2016.avg, family = "poisson")
+result_covariates.poisson <- glm(monarch_eggs.sum ~ block + treatment+deployment, offset=log(nplants), data=oviposition2016.avg, family = "poisson")
 summary(result_covariates.poisson)
 anova(result_covariates.poisson, test="Rao")
 summary(anova(result_covariates.poisson, test="Rao"))
 #skip pairwise comparisons- do this only for NB model
 #Test fit with negative binomial model
 library(pscl)
-result_covariates.nb <- glm.nb(monarch_eggs.sum ~ block + treatment +deployment+offset(nplants), data=oviposition2016.avg)
+result_covariates.nb <- glm.nb(monarch_eggs.sum ~ block + treatment + deployment, offset =log(nplants), data=oviposition2016.avg)
 summary(result_covariates.nb)
 anova(result_covariates.nb, test="Rao")
 summary(anova(result_covariates.nb, test="Rao"))
@@ -83,7 +84,7 @@ oviposition2016.deployment3.avg<- subset(oviposition2016.avg, deployment==3)
 
 library(pscl)
 
-result_covariates.deployment3.nb <- glm.nb(monarch_eggs.sum ~ block + treatment +offset(nplants), data=oviposition2016.deployment3.avg)
+result_covariates.deployment3.nb <- glm.nb(monarch_eggs.sum ~ block + treatment, offset= log(nplants), data=oviposition2016.deployment3.avg)
 summary(result_covariates.deployment3.nb)
 anova(result_covariates.deployment3.nb, test="Rao")
 summary(anova(result_covariates.deployment3.nb, test="Rao"))
@@ -152,6 +153,9 @@ oviposition2016.avg <-ddply(oviposition2016, .(treatment, date, time, block, dep
                             nplants=length(monarch_eggs))
 
 
+#drop the turf treatment
+oviposition2016.avg<-oviposition2016.avg[ which(oviposition2016.avg$treatment != 'turf'), ]
+
 #average plants checked per day and sum all the eggs found per day
 oviposition2016.avg.2 <-ddply(oviposition2016.avg, .(treatment, date, block, deployment), summarize, 
                               nplants.mean=mean(nplants),
@@ -181,14 +185,14 @@ anova(result_covariates) #use anova rather than AOV because it handles GLM bette
 summary(anova(result_covariates))
 TukeyHSD(aov(result_covariates)) #Tukey only works with aov function
 #rerun this with poisson distribution
-result_covariates.poisson <- glm(monarch_eggs.sum ~ block + treatment+deployment, offset=nplants, data=oviposition2016.avg, family = "poisson")
+result_covariates.poisson <- glm(monarch_eggs.sum ~ block + treatment+deployment, offset=log(nplants), data=oviposition2016.avg, family = "poisson")
 summary(result_covariates.poisson)
 anova(result_covariates.poisson, test="Rao")
 summary(anova(result_covariates.poisson, test="Rao"))
 #skip pairwise comparisons- do this only for NB model
 #Test fit with negative binomial model
 library(pscl)
-result_covariates.nb <- glm.nb(monarch_eggs.sum ~ block + treatment +deployment+offset(nplants), data=oviposition2016.avg)
+result_covariates.nb <- glm.nb(monarch_eggs.sum ~ block + treatment + deployment, offset=log(nplants), data=oviposition2016.avg)
 summary(result_covariates.nb)
 anova(result_covariates.nb, test="Rao")
 summary(anova(result_covariates.nb, test="Rao"))
@@ -267,20 +271,20 @@ summary(aov(result))
 TukeyHSD(aov(result))
 
 #rerun anova with appropriate data as factors, with sum of eggs as response variable
-result_covariates <- glm(monarch_eggs.sum ~ block + treatment+deployment, offset=nplants, data=oviposition2017.avg.2)
+result_covariates <- glm(monarch_eggs.sum ~ block + treatment + deployment, offset=nplants, data=oviposition2017.avg.2)
 summary(result_covariates)
 anova(result_covariates) #use anova rather than AOV because it handles GLM better
 summary(anova(result_covariates))
 TukeyHSD(aov(result_covariates)) #Tukey only works with aov function
 #rerun this with poisson distribution
-result_covariates.poisson <- glm(monarch_eggs.sum ~ block + treatment+deployment, offset=nplants, data=oviposition2017.avg.2, family = "poisson")
+result_covariates.poisson <- glm(monarch_eggs.sum ~ block + treatment+deployment, offset=log(nplants.mean), data=oviposition2017.avg.2, family = "poisson")
 summary(result_covariates.poisson)
 anova(result_covariates.poisson, test="Rao")
 summary(anova(result_covariates.poisson, test="Rao"))
 #skip pairwise comparisons- do this only for NB model
 #Test fit with negative binomial model
 library(pscl)
-result_covariates.nb <- glm.nb(monarch_eggs.sum ~ block + treatment +deployment+offset(nplants), data=oviposition2017.avg.2)
+result_covariates.nb <- glm.nb(monarch_eggs.sum ~ block + treatment + deployment, offset(log(nplants.mean)), data=oviposition2017.avg.2)
 summary(result_covariates.nb)
 anova(result_covariates.nb, test="Rao")
 summary(anova(result_covariates.nb, test="Rao"))
@@ -329,14 +333,10 @@ ggplot(oviposition2017.summary.overall, aes(x=treatment, y=mean, colour=treatmen
 
 
 
-
-
-
-
-
 ###### more ggplotting. can he make a faceted chart again? let's find out
 
 #faceted bar chart!
+cols <- c("gold2", "firebrick1", "yellowgreen", "mediumpurple" )
 labels <- c("1" = "June", "2" = "July", "3" = "August") #make labeller
 
 ggplot(oviposition2016.summary, aes(x=treatment, y=mean, colour=treatment)) + 
@@ -361,4 +361,14 @@ ggplot(oviposition2017.summary, aes(x=treatment, y=mean, colour=treatment)) +
   ggtitle("Monarch Butterfly oviposition2017 by Habitat with SE Bars") +
   theme(panel.background = element_blank(), axis.text.x = element_blank(),  axis.ticks = element_blank())+
   facet_grid(~deployment, labeller=labeller(deployment = labels))
+
+
+
+#Boxplot
+qplot(treatment, mean, data=oviposition2017.summary, geom=c("boxplot", "jitter"), 
+      fill=treatment, main="Mileage by Gear Number",
+      xlab="", ylab="mean eggs per stem")
+
+
+
 

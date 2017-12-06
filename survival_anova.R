@@ -234,10 +234,5 @@ ggplot(data2.summary.closed,
   
   
   
-  
-  
-  
-  
-  
-  
+
   
