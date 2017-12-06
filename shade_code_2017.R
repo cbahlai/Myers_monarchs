@@ -23,8 +23,7 @@ library(plyr)
 #sum monarch eggs within each plot, and create a column for how many plants were there
 shade_data.avg <-ddply(shade_data, .(date, treatment, site, canopy.cover), summarize, 
                             monarch_eggs.sum=sum(live_eggs),
-                            nplants=length(live_eggs),
-                            monarch_eggs.mean=mean(live_eggs))
+                            nplants=length(live_eggs))
                                              
 #load(pscl)                                                   
 library(pscl)

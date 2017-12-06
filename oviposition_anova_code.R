@@ -10,6 +10,10 @@ oviposition2016.avg <-ddply(oviposition2016, .(treatment, date, time, block, dep
                                     monarch_eggs.sum=sum(monarch_eggs),
                                     nplants=length(monarch_eggs))
 
+#drop the turf treatment
+oviposition2016.avg<-oviposition2016.avg[ which(oviposition2016.avg$treatment != 'turf'), ]
+
+
 #make block, date, time, deployment into factors
 oviposition2016.avg$block <- as.factor(oviposition2016.avg$block)
 oviposition2016.avg$date <- as.factor(oviposition2016.avg$date)
@@ -30,14 +34,14 @@ anova(result_covariates) #use anova rather than AOV because it handles GLM bette
 summary(anova(result_covariates))
 TukeyHSD(aov(result_covariates)) #Tukey only works with aov function
 #rerun this with poisson distribution
-result_covariates.poisson <- glm(monarch_eggs.sum ~ block + treatment+deployment, offset=nplants, data=oviposition2016.avg, family = "poisson")
+result_covariates.poisson <- glm(monarch_eggs.sum ~ block + treatment+deployment, offset=log(nplants), data=oviposition2016.avg, family = "poisson")
 summary(result_covariates.poisson)
 anova(result_covariates.poisson, test="Rao")
 summary(anova(result_covariates.poisson, test="Rao"))
 #skip pairwise comparisons- do this only for NB model
 #Test fit with negative binomial model
 library(pscl)
-result_covariates.nb <- glm.nb(monarch_eggs.sum ~ block + treatment +deployment+offset(nplants), data=oviposition2016.avg)
+result_covariates.nb <- glm.nb(monarch_eggs.sum ~ block + treatment + deployment, offset =log(nplants), data=oviposition2016.avg)
 summary(result_covariates.nb)
 anova(result_covariates.nb, test="Rao")
 summary(anova(result_covariates.nb, test="Rao"))
@@ -62,7 +66,7 @@ oviposition2016.summary.overall<-ddply(oviposition2016.avg, .(treatment), summar
 library(ggplot2)
 # Error bars represent standard error of the mean
 #cols is my personalized colour palette.
-cols <- c("gold2", "firebrick1", "yellowgreen", "mediumpurple", "dodgerblue2" )
+cols <- c("gold2", "firebrick1", "yellowgreen", "mediumpurple")
 ggplot(oviposition2016.summary.overall, aes(x=treatment, y=mean, fill=treatment)) + 
   geom_bar(position=position_dodge(), stat="identity", size=.3, fill=cols) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=.2, position=position_dodge(.9)) +
@@ -80,7 +84,7 @@ oviposition2016.deployment3.avg<- subset(oviposition2016.avg, deployment==3)
 
 library(pscl)
 
-result_covariates.deployment3.nb <- glm.nb(monarch_eggs.sum ~ block + treatment +offset(nplants), data=oviposition2016.deployment3.avg)
+result_covariates.deployment3.nb <- glm.nb(monarch_eggs.sum ~ block + treatment, offset= log(nplants), data=oviposition2016.deployment3.avg)
 summary(result_covariates.deployment3.nb)
 anova(result_covariates.deployment3.nb, test="Rao")
 summary(anova(result_covariates.deployment3.nb, test="Rao"))
@@ -100,7 +104,7 @@ head(oviposition2016.deployment3.summary)
 #make a bar plot with ggplot
 # Error bars represent standard error of the mean
 #cols is my personalized colour palette.
-cols <- c("gold2", "firebrick1", "yellowgreen", "mediumpurple", "dodgerblue2" )
+cols <- c("gold2", "firebrick1", "yellowgreen", "mediumpurple")
 ggplot(oviposition2016.deployment3.summary, aes(x=treatment, y=mean, fill=treatment)) + 
   geom_bar(position=position_dodge(), stat="identity", size=.3, fill=cols) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=.2, position=position_dodge(.9)) +
@@ -149,6 +153,9 @@ oviposition2016.avg <-ddply(oviposition2016, .(treatment, date, time, block, dep
                             nplants=length(monarch_eggs))
 
 
+#drop the turf treatment
+oviposition2016.avg<-oviposition2016.avg[ which(oviposition2016.avg$treatment != 'turf'), ]
+
 #average plants checked per day and sum all the eggs found per day
 oviposition2016.avg.2 <-ddply(oviposition2016.avg, .(treatment, date, block, deployment), summarize, 
                               nplants.mean=mean(nplants),
@@ -178,14 +185,14 @@ anova(result_covariates) #use anova rather than AOV because it handles GLM bette
 summary(anova(result_covariates))
 TukeyHSD(aov(result_covariates)) #Tukey only works with aov function
 #rerun this with poisson distribution
-result_covariates.poisson <- glm(monarch_eggs.sum ~ block + treatment+deployment, offset=nplants, data=oviposition2016.avg, family = "poisson")
+result_covariates.poisson <- glm(monarch_eggs.sum ~ block + treatment+deployment, offset=log(nplants), data=oviposition2016.avg, family = "poisson")
 summary(result_covariates.poisson)
 anova(result_covariates.poisson, test="Rao")
 summary(anova(result_covariates.poisson, test="Rao"))
 #skip pairwise comparisons- do this only for NB model
 #Test fit with negative binomial model
 library(pscl)
-result_covariates.nb <- glm.nb(monarch_eggs.sum ~ block + treatment +deployment+offset(nplants), data=oviposition2016.avg)
+result_covariates.nb <- glm.nb(monarch_eggs.sum ~ block + treatment + deployment, offset=log(nplants), data=oviposition2016.avg)
 summary(result_covariates.nb)
 anova(result_covariates.nb, test="Rao")
 summary(anova(result_covariates.nb, test="Rao"))
@@ -216,14 +223,13 @@ library(ggplot2)
 # Error bars represent standard error of the mean
 #cols is my personalized colour palette. it doesn't seem to work any more
 
-cols <- c("gold2", "firebrick1", "yellowgreen", "mediumpurple", "dodgerblue2" )
-ggplot(oviposition2016.summary.overall, aes(x=treatment, y=mean, fill=treatment)) + 
-  geom_bar(position=position_dodge(), stat="identity", size=.3) +
-  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=.2, position=position_dodge(.9)) +
+cols <- c("gold2", "firebrick1", "yellowgreen", "mediumpurple")
+ggplot(oviposition2016.summary.overall, aes(x=treatment, y=mean, colour=treatment)) + 
+  geom_bar(position=position_dodge(), stat="identity", size=.3, fill=cols) +
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=.2, position=position_dodge(.9), colour="black") +
   scale_color_manual(values=cols)+
-  ylab("monarch eggs / plant obervation" )+
-  ggtitle("Monarch Butterfly oviposition2016 by Habitat with SE Bars") +
-  theme(panel.background = element_blank(), complete=FALSE)
+  ylim(0,.1)+
+  theme(panel.background = element_blank(), text = element_text(size=20, colour = "black"), complete=FALSE)
 
 
 
@@ -265,20 +271,20 @@ summary(aov(result))
 TukeyHSD(aov(result))
 
 #rerun anova with appropriate data as factors, with sum of eggs as response variable
-result_covariates <- glm(monarch_eggs.sum ~ block + treatment+deployment, offset=nplants, data=oviposition2017.avg.2)
+result_covariates <- glm(monarch_eggs.sum ~ block + treatment + deployment, offset=nplants, data=oviposition2017.avg.2)
 summary(result_covariates)
 anova(result_covariates) #use anova rather than AOV because it handles GLM better
 summary(anova(result_covariates))
 TukeyHSD(aov(result_covariates)) #Tukey only works with aov function
 #rerun this with poisson distribution
-result_covariates.poisson <- glm(monarch_eggs.sum ~ block + treatment+deployment, offset=nplants, data=oviposition2017.avg.2, family = "poisson")
+result_covariates.poisson <- glm(monarch_eggs.sum ~ block + treatment+deployment, offset=log(nplants.mean), data=oviposition2017.avg.2, family = "poisson")
 summary(result_covariates.poisson)
 anova(result_covariates.poisson, test="Rao")
 summary(anova(result_covariates.poisson, test="Rao"))
 #skip pairwise comparisons- do this only for NB model
 #Test fit with negative binomial model
 library(pscl)
-result_covariates.nb <- glm.nb(monarch_eggs.sum ~ block + treatment +deployment+offset(nplants), data=oviposition2017.avg.2)
+result_covariates.nb <- glm.nb(monarch_eggs.sum ~ block + treatment + deployment, offset(log(nplants.mean)), data=oviposition2017.avg.2)
 summary(result_covariates.nb)
 anova(result_covariates.nb, test="Rao")
 summary(anova(result_covariates.nb, test="Rao"))
@@ -314,16 +320,10 @@ library(ggplot2)
 cols2017 <- c("gold2", "firebrick1", "yellowgreen", "mediumpurple" )
 ggplot(oviposition2017.summary.overall, aes(x=treatment, y=mean, colour=treatment)) + 
   geom_bar(position=position_dodge(), stat="identity", size=.3, fill=cols2017) +
-  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=.2, position=position_dodge(.9)) +
+  ylim(0,.1)+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=.2, position=position_dodge(.9), colour="black") +
   scale_color_manual(values=cols2017)+
-  ylab("monarch eggs / plant obervation" )+
-  ggtitle("Monarch Butterfly oviposition2017 by Habitat with SE Bars") +
-  theme(panel.background = element_blank(), complete=FALSE)
-
-
-
-
-
+  theme(panel.background = element_blank(), text = element_text(size=20, colour = "black"), complete=FALSE)
 
 
 
@@ -336,6 +336,7 @@ ggplot(oviposition2017.summary.overall, aes(x=treatment, y=mean, colour=treatmen
 ###### more ggplotting. can he make a faceted chart again? let's find out
 
 #faceted bar chart!
+cols <- c("gold2", "firebrick1", "yellowgreen", "mediumpurple" )
 labels <- c("1" = "June", "2" = "July", "3" = "August") #make labeller
 
 ggplot(oviposition2016.summary, aes(x=treatment, y=mean, colour=treatment)) + 
@@ -360,4 +361,14 @@ ggplot(oviposition2017.summary, aes(x=treatment, y=mean, colour=treatment)) +
   ggtitle("Monarch Butterfly oviposition2017 by Habitat with SE Bars") +
   theme(panel.background = element_blank(), axis.text.x = element_blank(),  axis.ticks = element_blank())+
   facet_grid(~deployment, labeller=labeller(deployment = labels))
+
+
+
+#Boxplot
+qplot(treatment, mean, data=oviposition2017.summary, geom=c("boxplot", "jitter"), 
+      fill=treatment, main="Mileage by Gear Number",
+      xlab="", ylab="mean eggs per stem")
+
+
+
 
