@@ -1,17 +1,12 @@
 #bring data in
 
-data<-read.csv(file="deployment2_2016_notsmooth_csv.csv", header=TRUE)
-
-#drop turf and post 72 hour obs
-data <- data[ which(data$hours_since_deployment < 73 & data$treatment != 'turf'), ]
+data<-read.csv(file="deployment2_csv.csv", header=TRUE)
 
 #make block into a factor
 data$block <- as.factor(data$block)
 
 data$total<-rowSums(data[7:13])
 data$surviving<-data$total/data$Initial_count
-
-
 
 library(reshape2)
 
@@ -240,10 +235,3 @@ ggplot(data2.summary.closed,
     ylab("surviving")+
     ggtitle("49 Hours") +
     theme(panel.background = element_blank(), axis.text.x = element_blank(),  axis.ticks = element_blank())
-  
-  
-  
-  
-  
-
-  
