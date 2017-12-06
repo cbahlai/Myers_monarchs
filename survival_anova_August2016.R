@@ -41,7 +41,7 @@ anova(result)
 #analysis of time and Treatment effects
 step(result)
 
-t.test(data2$surviving~data2$closed)
+t.test(data2$surviving,data2$closed)
 
 
 
