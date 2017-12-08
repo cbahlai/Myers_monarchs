@@ -49,15 +49,41 @@ shade_data.summary<-ddply(shade_data.avg, .(treatment), summarize,
 #load ggplot
 library(ggplot2)
 ggplot(shade_data.summary, aes(x=treatment, y=mean)) + 
-  geom_bar(position=position_dodge(), stat="identity", size=.3) +
+  geom_bar(position=position_dodge(), stat="identity", size=.3, fill="cornflowerblue") +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=.2, position=position_dodge(.9)) +
   ylab("monarch eggs / plant" )+
-  theme(panel.background = element_blank(), complete=FALSE)
+  theme(panel.background = element_blank(), complete=FALSE)+ 
+  theme_few()
+  ggsave("shade_experiment.png", width = 6, height = 3)
 
+#make an object with just grass margin and full shade  
+shade_data.summary2<-shade_data.summary[ which(shade_data.summary$treatment != 'full sun'), ]
+shade_data.summary2<-shade_data.summary2[ which(shade_data.summary2$treatment != '1/3 plants removed'), ]
+shade_data.summary2<-shade_data.summary2[ which(shade_data.summary2$treatment != '2/3 plants removed'), ]
 
+#make an object without grass margin and full shade
+shade_data.summary3<-shade_data.summary[ which(shade_data.summary$treatment != 'grass margin'), ]
+shade_data.summary3<-shade_data.summary3[ which(shade_data.summary3$treatment != 'full shade'), ]
 
+#now plot as above
+ggplot(shade_data.summary2, aes(x=treatment, y=mean)) + 
+  geom_bar(position=position_dodge(), stat="identity", size=.3, fill="cornflowerblue") +
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=.2, position=position_dodge(.9)) +
+  ylab("monarch eggs / plant" )+
+  theme(panel.background = element_blank(), complete=FALSE)+ 
+  theme_few()+
+  scale_y_continuous(expand = c(0, 0), limits = c(0, .4))
+  
+ggsave("shade_experiment_grassvscorn.png", width = 3, height = 3)
 
-
+ggplot(shade_data.summary3, aes(x=treatment, y=mean)) + 
+  geom_bar(position=position_dodge(), stat="identity", size=.3, fill="palegreen") +
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=.2, position=position_dodge(.9)) +
+  ylab("monarch eggs / plant" )+
+  theme(panel.background = element_blank(), complete=FALSE)+ 
+  theme_few()+
+  scale_y_continuous(expand = c(0, 0), limits = c(0, .4))
+ggsave("shade_experiment_cutcorn.png", width = 5, height = 3)
 
 
 
