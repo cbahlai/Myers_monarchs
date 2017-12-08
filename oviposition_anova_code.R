@@ -336,31 +336,39 @@ ggplot(oviposition2017.summary.overall, aes(x=treatment, y=mean, colour=treatmen
 ###### more ggplotting. can he make a faceted chart again? let's find out
 
 #faceted bar chart!
-cols <- c("gold2", "firebrick1", "yellowgreen", "mediumpurple" )
+cols <- c( "firebrick1", "gold2","yellowgreen", "mediumpurple" )
 labels <- c("1" = "June", "2" = "July", "3" = "August") #make labeller
 
 ggplot(oviposition2016.summary, aes(x=treatment, y=mean, colour=treatment)) + 
   geom_bar(position=position_dodge(), stat="identity", size=.3, fill=cols) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), colour="black", width=.2, position=position_dodge(.9)) +
   scale_color_manual(values=cols)+
-  ylab("monarch eggs / plant observation" )+
-  ggtitle("Monarch Butterfly oviposition2016 by Habitat with SE Bars") +
   theme(panel.background = element_blank(), axis.text.x = element_blank(),  axis.ticks = element_blank())+
-  facet_grid(~deployment, labeller=labeller(deployment = labels))
+  facet_grid(~deployment, labeller=labeller(deployment = labels))+
+  xlab("")+
+ylab("")+
+  theme_few()+
+  scale_y_continuous(expand = c(0, 0), limits = c(0, .3))
+ggsave('faceted_ovipostion_2016.png', width = 7, height = 3)
+
+
 
 
 #for 2017
-cols2017 <- c("gold2", "firebrick1", "yellowgreen", "mediumpurple" )
+cols2017 <- c("firebrick1","gold2",  "yellowgreen", "mediumpurple" )
 labels <- c("1" = "June", "2" = "July", "3" = "August") #make labeller
 
 ggplot(oviposition2017.summary, aes(x=treatment, y=mean, colour=treatment)) + 
   geom_bar(position=position_dodge(), stat="identity", size=.3, fill=cols2017) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), colour="black", width=.2, position=position_dodge(.9)) +
   scale_color_manual(values=cols2017)+
-  ylab("monarch eggs / plant observation" )+
-  ggtitle("Monarch Butterfly oviposition2017 by Habitat with SE Bars") +
   theme(panel.background = element_blank(), axis.text.x = element_blank(),  axis.ticks = element_blank())+
-  facet_grid(~deployment, labeller=labeller(deployment = labels))
+  facet_grid(~deployment, labeller=labeller(deployment = labels))+
+  xlab("")+
+  ylab("")+
+  theme_few()+
+  scale_y_continuous(expand = c(0, 0), limits = c(0, .3))
+  ggsave('faceted_ovipostion_2017.png', width = 7, height = 3)
 
 
 

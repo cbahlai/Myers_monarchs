@@ -91,26 +91,27 @@ data2.summary.sham<-ddply(data2, .(hours_since_deployment, treatment), summarize
 cols <- c("corn" = "gold2", "prairie" = "lightreen", "soy" = "mediumpurple", "bare" = "firebrick1", "turf" ="dodgerblue2" )
 #load ggplot2
 library(ggplot2)
+library(ggthemes)
 
 ##error bar plots
 
-cols <- c("corn" = "gold2", "prairie" = "limegreen", "soy" = "mediumpurple", "bare" = "firebrick1", "turf" ="dodgerblue2" )
+cols <- c("corn" = "gold2", "prairie" = "yellowgreen", "soy" = "mediumpurple", "bare" = "firebrick1", "turf" ="dodgerblue2" )
 ggplot.eb.open<- ggplot(data2.summary, 
                  aes(x=hours_since_deployment, y=mean, shape=treatment, colour=treatment, fill=treatment))+
   geom_point()+
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), colour="black", width=.2, position="dodge")+
   scale_colour_manual(values=cols)+ 
   scale_fill_manual(values=cols)+
-  geom_line(size=3)+
+  geom_line(size=1)+
   theme_bw()+
   scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))+
-  scale_y_continuous(expand = c(0, 0), limits = c(0, 1))
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1))+
   xlab("")+
-  ylab("")
-
-  
-
+  ylab("")+
+  theme_few()
+  ggsave('ggplot.eb.open_aug_2016.png', width=4, height=2)
 ggplot.eb.open
+
 
 ggplot.eb.closed<- ggplot(data2.summary.closed, 
                        aes(x=hours_since_deployment, y=mean, shape=treatment, colour=treatment, fill=treatment))+
@@ -118,16 +119,17 @@ ggplot.eb.closed<- ggplot(data2.summary.closed,
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), colour="black", width=.2, position="dodge")+
   scale_colour_manual(values=cols)+ 
   scale_fill_manual(values=cols)+
-  geom_line(size=3)+
+  geom_line(size=1)+
   theme_bw()+
   theme(text = element_text(size=14))+
   scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))+
   scale_y_continuous(expand = c(0, 0), limits = c(0, 1))+
   xlab("")+
-  ylab("")
-
-
+  ylab("")+
+  theme_few()
+ggsave('ggplot.eb.closed_aug_2016.png', width=4, height=2)
 ggplot.eb.closed
+
 
 ggplot.eb.sham<- ggplot(data2.summary.sham, 
                      aes(x=hours_since_deployment, y=mean, shape=treatment, colour=treatment, fill=treatment))+
@@ -135,13 +137,15 @@ ggplot.eb.sham<- ggplot(data2.summary.sham,
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), colour="black", width=.2, position="dodge")+
   scale_colour_manual(values=cols)+ 
   scale_fill_manual(values=cols)+
-  geom_line(size=3)+
+  geom_line(size=1)+
   theme(text = element_text(size=14))+
   theme_bw()+
   scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))+
   scale_y_continuous(expand = c(0, 0), limits = c(0, 1))+
   xlab("")+
-  ylab("")
+  ylab("")+
+  theme_few()
+ggsave('ggplot.eb.sham_aug_2016.png', width=4, height=2)
 
 
 ggplot.eb.sham
