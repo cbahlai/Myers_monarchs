@@ -1,6 +1,6 @@
 #bring data in
 
-data<-read.csv(file="deployment2_2016_notsmooth_csv.csv", header=TRUE)
+data<-read.csv(file="deployment2_2016_smooth_csv.csv", header=TRUE)
 
 #drop turf and post 72 hour obs
 data <- data[ which(data$hours_since_deployment < 73 & data$treatment != 'turf'), ]
@@ -8,8 +8,8 @@ data <- data[ which(data$hours_since_deployment < 73 & data$treatment != 'turf')
 #make block into a factor
 data$block <- as.factor(data$block)
 
-data$total<-rowSums(data[7:13])
-data$surviving<-data$total/data$Initial_count
+##not using this code bit for 2016, because i did it in excel when smoothing: data$total<-rowSums(data[7:13])
+####data$surviving<-data$total_all_stages/data$Initial_count
 
 
 
@@ -88,27 +88,76 @@ data2.summary.sham<-ddply(data2, .(hours_since_deployment, treatment), summarize
 #creating the plot!
 
 #make my colour palette
-cols <- c("corn" = "gold2", "prairie" = "limegreen", "soy" = "mediumpurple", "fallow" = "firebrick1", "turf" ="dodgerblue2" )
+cols <- c("corn" = "gold2", "prairie" = "lightreen", "soy" = "mediumpurple", "bare" = "firebrick1", "turf" ="dodgerblue2" )
 #load ggplot2
 library(ggplot2)
-#make the pot
-ggplot1<- ggplot(data2.summary, 
-          aes(x=data2.summary$hours_since_deployment, y=mean, colour=treatment, shape=treatment)) +
-          scale_color_manual(values=cols)+
-          geom_point()+
-          geom_line(size=1.5)+
-          geom_errorbar(aes(ymin=mean-se, ymax=mean+se), colour="black", width=.2, position="dodge")+
-          xlab("Hours Since Deployment")+
-          ylab("Surviving")+
-          theme(text = element_text(size=14))+
-          scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))
-        
-#view the plot
-ggplot1
+
+##error bar plots
+
+cols <- c("corn" = "gold2", "prairie" = "limegreen", "soy" = "mediumpurple", "bare" = "firebrick1", "turf" ="dodgerblue2" )
+ggplot.eb.open<- ggplot(data2.summary, 
+                 aes(x=hours_since_deployment, y=mean, shape=treatment, colour=treatment, fill=treatment))+
+  geom_point()+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), colour="black", width=.2, position="dodge")+
+  scale_colour_manual(values=cols)+ 
+  scale_fill_manual(values=cols)+
+  geom_line(size=3)+
+  theme_bw()+
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))+
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1))
+  xlab("")+
+  ylab("")
+
+  
+
+ggplot.eb.open
+
+ggplot.eb.closed<- ggplot(data2.summary.closed, 
+                       aes(x=hours_since_deployment, y=mean, shape=treatment, colour=treatment, fill=treatment))+
+  geom_point()+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), colour="black", width=.2, position="dodge")+
+  scale_colour_manual(values=cols)+ 
+  scale_fill_manual(values=cols)+
+  geom_line(size=3)+
+  theme_bw()+
+  theme(text = element_text(size=14))+
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))+
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1))+
+  xlab("")+
+  ylab("")
 
 
-#cooler ggplot 
-cols <- c("corn" = "gold2", "prairie" = "limegreen", "soy" = "mediumpurple", "fallow" = "firebrick1", "turf" ="dodgerblue2" )
+ggplot.eb.closed
+
+ggplot.eb.sham<- ggplot(data2.summary.sham, 
+                     aes(x=hours_since_deployment, y=mean, shape=treatment, colour=treatment, fill=treatment))+
+  geom_point()+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), colour="black", width=.2, position="dodge")+
+  scale_colour_manual(values=cols)+ 
+  scale_fill_manual(values=cols)+
+  geom_line(size=3)+
+  theme(text = element_text(size=14))+
+  theme_bw()+
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))+
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1))+
+  xlab("")+
+  ylab("")
+
+
+ggplot.eb.sham
+
+
+
+
+
+
+
+
+
+
+
+#ribbon plots 
+cols <- c("corn" = "gold2", "prairie" = "limegreen", "soy" = "mediumpurple", "bare" = "firebrick1", "turf" ="dodgerblue2" )
 ggplot2<- ggplot(data2.summary, 
           aes(x=hours_since_deployment, y=mean, shape=treatment, colour=treatment, fill=treatment))+
           geom_point()+
@@ -171,7 +220,7 @@ ggplot(data2.summary, aes(x=treatment, y=mean, colour=treatment, fill=treatment)
 
 #####Plots for presentation
 
-cols <- c("corn" = "gold2", "prairie" = "yellowgreen", "soy" = "mediumpurple", "fallow" = "firebrick1", "turf" ="dodgerblue2" )
+cols <- c("corn" = "gold2", "prairie" = "yellowgreen", "soy" = "mediumpurple", "bare" = "firebrick1", "turf" ="dodgerblue2" )
 ggplot(data2.summary, 
                  aes(x=data2.summary$hours_since_deployment, y=mean, colour=treatment, shape=treatment)) +
   scale_color_manual(values=cols)+
@@ -201,6 +250,15 @@ ggplot(data2.summary.closed,
                                      size=14),
           axis.text.y = element_text(face="bold", size=14))
   scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   
   ##for presentation bar plots for individual times

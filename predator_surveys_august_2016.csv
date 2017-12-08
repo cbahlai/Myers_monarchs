@@ -1,4 +1,4 @@
-date,time,block,treatment,nabidae,coccin_total,mirdae,earwigs,ncme_total,coccin_adults,coccin_larvae,pres_ants,lacewing_larva,lacewing_adults,lw_egg,LL_fly,syrphid,par_wasp,pred_wasp,pentatomidae_ad_and_imm,spider,scorpionfly,lampyridae,cantharid_larva,harvestman,slug
+date,time,block,treatment,nabidae,coccin_total,miridae,earwigs,ncme_total,coccin_adults,coccin_larvae,pres_ants,lacewing_larva,lacewing_adults,lw_egg,LL_fly,syrphid,par_wasp,pred_wasp,pentatomidae_ad_and_imm,spider,scorpionfly,lampyridae,cantharid_larva,harvestman,slug
 23-Aug,16:40,1,corn,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0
 23-Aug,16:40,1,turf,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 23-Aug,16:40,1,soy,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0

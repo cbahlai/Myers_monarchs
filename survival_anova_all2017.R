@@ -40,6 +40,7 @@ anova(result)
 #analysis of time and Treatment effects
 step(result)
 
+t.test(data2$surviving,data2$closed)
 
 
 ##
@@ -59,7 +60,7 @@ data2.summary<-ddply(data2, .(hours_since_deployment, treatment), summarize,
                      sd   = sd(surviving),
                      se   = sd / sqrt(N) )
 
-data2.summary.close<-ddply(data2, .(hours_since_deployment, treatment), summarize,
+data2.summary.closed<-ddply(data2, .(hours_since_deployment, treatment), summarize,
                             N=length(close),
                             mean=mean(close),
                             sd   = sd(close),
@@ -77,20 +78,67 @@ data2.summary.sham<-ddply(data2, .(hours_since_deployment, treatment), summarize
 cols <- c("corn" = "gold2", "prairie" = "limegreen", "soy" = "mediumpurple", "bare" = "firebrick1" )
 #load ggplot2
 library(ggplot2)
-#make the pot
-ggplot1<- ggplot(data2.summary, 
-                 aes(x=data2.summary$hours_since_deployment, y=mean, colour=treatment, shape=treatment)) +
-  scale_color_manual(values=cols)+
-  geom_point()+
-  geom_line(size=1.5)+
-  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), colour="black", width=.2, position="dodge")+
-  xlab("Hours Since Deployment")+
-  ylab("Surviving")+
-  theme(text = element_text(size=14))+
-  scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))
 
-#view the plot
-ggplot1
+
+
+##error bar plots
+
+cols <- c("corn" = "gold2", "prairie" = "limegreen", "soy" = "mediumpurple", "bare" = "firebrick1", "turf" ="dodgerblue2" )
+ggplot.eb.open<- ggplot(data2.summary, 
+                        aes(x=hours_since_deployment, y=mean, shape=treatment, colour=treatment, fill=treatment))+
+  geom_point()+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), colour="black", width=.2, position="dodge")+
+  scale_colour_manual(values=cols)+ 
+  scale_fill_manual(values=cols)+
+  geom_line(size=3)+
+  theme_bw()+
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))+
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1))+
+  xlab("")+
+  ylab("")
+
+
+
+ggplot.eb.open
+
+ggplot.eb.closed<- ggplot(data2.summary.closed, 
+                          aes(x=hours_since_deployment, y=mean, shape=treatment, colour=treatment, fill=treatment))+
+  geom_point()+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), colour="black", width=.2, position="dodge")+
+  scale_colour_manual(values=cols)+ 
+  scale_fill_manual(values=cols)+
+  geom_line(size=3)+
+  theme_bw()+
+  theme(text = element_text(size=14))+
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))+
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1))+
+  xlab("")+
+  ylab("")
+
+
+ggplot.eb.closed
+
+ggplot.eb.sham<- ggplot(data2.summary.sham, 
+                        aes(x=hours_since_deployment, y=mean, shape=treatment, colour=treatment, fill=treatment))+
+  geom_point()+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), colour="black", width=.2, position="dodge")+
+  scale_colour_manual(values=cols)+ 
+  scale_fill_manual(values=cols)+
+  geom_line(size=3)+
+  theme(text = element_text(size=14))+
+  theme_bw()+
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))+
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1))+
+  xlab("")+
+  ylab("")
+
+
+ggplot.eb.sham
+
+
+
+
+
 
 
 #cooler ggplot 
@@ -204,6 +252,7 @@ anova(result)
 #analysis of time and Treatment effects
 step(result)
 
+t.test(data2$surviving,data2$closed)
 
 
 ##
@@ -223,7 +272,7 @@ data2.summary<-ddply(data2, .(hours_since_deployment, treatment), summarize,
                      sd   = sd(surviving),
                      se   = sd / sqrt(N) )
 
-data2.summary.close<-ddply(data2, .(hours_since_deployment, treatment), summarize,
+data2.summary.closed<-ddply(data2, .(hours_since_deployment, treatment), summarize,
                             N=length(close),
                             mean=mean(close),
                             sd   = sd(close),
@@ -241,20 +290,60 @@ data2.summary.sham<-ddply(data2, .(hours_since_deployment, treatment), summarize
 cols <- c("corn" = "gold2", "prairie" = "limegreen", "soy" = "mediumpurple", "bare" = "firebrick1" )
 #load ggplot2
 library(ggplot2)
-#make the pot
-ggplot1<- ggplot(data2.summary, 
-                 aes(x=data2.summary$hours_since_deployment, y=mean, colour=treatment, shape=treatment)) +
-  scale_color_manual(values=cols)+
-  geom_point()+
-  geom_line(size=1.5)+
-  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), colour="black", width=.2, position="dodge")+
-  xlab("Hours Since Deployment")+
-  ylab("Surviving")+
-  theme(text = element_text(size=14))+
-  scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))
+##error bar plots
 
-#view the plot
-ggplot1
+cols <- c("corn" = "gold2", "prairie" = "limegreen", "soy" = "mediumpurple", "bare" = "firebrick1", "turf" ="dodgerblue2" )
+ggplot.eb.open<- ggplot(data2.summary, 
+                        aes(x=hours_since_deployment, y=mean, shape=treatment, colour=treatment, fill=treatment))+
+  geom_point()+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), colour="black", width=.2, position="dodge")+
+  scale_colour_manual(values=cols)+ 
+  scale_fill_manual(values=cols)+
+  geom_line(size=3)+
+  theme_bw()+
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))+
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1))+
+  xlab("")+
+  ylab("")
+
+
+
+ggplot.eb.open
+
+ggplot.eb.closed<- ggplot(data2.summary.closed, 
+                          aes(x=hours_since_deployment, y=mean, shape=treatment, colour=treatment, fill=treatment))+
+  geom_point()+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), colour="black", width=.2, position="dodge")+
+  scale_colour_manual(values=cols)+ 
+  scale_fill_manual(values=cols)+
+  geom_line(size=3)+
+  theme_bw()+
+  theme(text = element_text(size=14))+
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))+
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1))+
+  xlab("")+
+  ylab("")
+
+
+ggplot.eb.closed
+
+ggplot.eb.sham<- ggplot(data2.summary.sham, 
+                        aes(x=hours_since_deployment, y=mean, shape=treatment, colour=treatment, fill=treatment))+
+  geom_point()+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), colour="black", width=.2, position="dodge")+
+  scale_colour_manual(values=cols)+ 
+  scale_fill_manual(values=cols)+
+  geom_line(size=3)+
+  theme(text = element_text(size=14))+
+  theme_bw()+
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))+
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1))+
+  xlab("")+
+  ylab("")
+
+
+ggplot.eb.sham
+
 
 
 #cooler ggplot 
