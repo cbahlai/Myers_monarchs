@@ -152,3 +152,5 @@ ggplot(hobo.summary, aes(x=treatment, y=mean.RH, fill=site)) +
   theme(panel.background = element_blank(), complete=FALSE)+ 
   theme_few()
 ggsave("shade_hobo_RH.png", width = 10, height = 6)
+
+
