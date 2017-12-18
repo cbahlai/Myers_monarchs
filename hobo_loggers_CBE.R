@@ -3,7 +3,7 @@
 
 ###read in hobo logger data
 
-b1.corn<-read.csv(file="LandisLogger6_B1_CORN.csv", header=TRUE)
+
 b2.corn<-read.csv(file="LandisLogger2_B2_CORN.csv", header=TRUE)
 b3.corn<-read.csv(file="LandisLogger12_B3_CORN.csv", header=TRUE)
 b4.corn<-read.csv(file="LandisLogger15_B4_CORN.csv", header=TRUE)
@@ -19,9 +19,11 @@ b1.prairie<-read.csv(file="LandisLogger5_B1_PRAIRIE.csv", header=TRUE)
 b2.prairie<-read.csv(file="LandisLogger3_B2_PRAIRIE.csv", header=TRUE)
 b3.prairie<-read.csv(file="LandisLogger10_B3_PRAIRIE.csv", header=TRUE)
 b4.prairie<-read.csv(file="LandisLogger16_B4_PRAIRIE.csv", header=TRUE)
+##### leave out logger6, because it recorded every minute and only recorded in the field 6/12-6/27
+#####b1.corn<-read.csv(file="LandisLogger6_B1_CORN.csv", header=TRUE)
 
 #####put all the files together
-hobo.cbe <-rbind(b1.corn, b2.corn, b3.corn, b4.corn, b1.soy, b2.soy, b3.soy, 
+hobo.cbe <-rbind(b2.corn, b3.corn, b4.corn, b1.soy, b2.soy, b3.soy, 
             b4.soy, b1.bare, b2.bare, b3.bare, b4.bare, b1.prairie, b2.prairie, b3.prairie, b4.prairie)
 
 
@@ -31,9 +33,26 @@ hobo<-na.omit(hobo.cbe)
 ### treatment is a factor
 hobo.cbe$treatment<-as.factor(hobo.cbe$treatment)
 
-#make a plot
-#summaraize for plotting
+library(ggplot2)
+library(ggthemes)
+#make a boxplot for temperature
+ggplot(hobo.cbe, aes(x = treatment, y = temp)) +
+  geom_boxplot(fill="cornflowerblue")+
+  theme_few()+
+  xlab("Treatment") + ylab("Temp in Degrees F")
+ggsave("CBE_temp_boxplot.png", width = 4, height = 5)
 
+library(ggplot2)
+library(ggthemes)
+#make a boxplot for RH
+ggplot(hobo.cbe, aes(x = treatment, y = RH)) +
+  geom_boxplot(fill="palegreen")+
+theme_few()+
+  xlab("Treatment") + ylab("Relative Humidity")
+ggsave("CBE_RH_boxplot.png", width = 4, height = 5)
+
+
+#summaraize for plotting
 library(plyr)
 hobo.cbe.summary<-ddply(hobo.cbe, .(site, treatment, block), summarize, 
                     N=length(temp),
