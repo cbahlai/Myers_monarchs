@@ -48,20 +48,16 @@ step(result)
 ###make object data70 with only surviving at 70 hours
 data70<-data2[ which(data2$hours_since_deployment == "70"), ]
 ###do t-test comparing closed and sham
-t.test(data70$close,data70$sham)
+t.test(data70$close,data70$sham, paired=TRUE)
 ###t-test comparing open vs sham
-t.test(data70$surviving,data70$sham)
+t.test(data70$surviving,data70$sham, paired=TRUE)
+
+##wilcox test of same
+wilcox.test(data70$close, data70$sham, paired=TRUE)
+wilcox.test(data70$surviving, data70$sham, paired=TRUE)
 
 ##
 ###below is lots of plotting code
-
-melt<-melt(data2, measure.vars = c("surviving", "closed", "sham"))
-
-summary.melt<-ddply(melt, .(hours_since_deployment, variable), summarize,
-                    N=length(value),
-                    mean=mean(value),
-                    sd   = sd(value),
-                    se   = sd / sqrt(N) )
 
 
 
@@ -223,13 +219,14 @@ summary.melt<-ddply(melt, .(hours_since_deployment, variable), summarize,
                     se   = sd / sqrt(N) )
 
 ggplot(summary.melt, aes(x=hours_since_deployment, y=mean, fill=variable))+
-  ggtitle("August 2016: Mean Survival by Exclosure Treatment")+
+  ggtitle("August 2016")+
   geom_point()+
   geom_ribbon(aes(ymin=mean-se, ymax=mean+se, alpha=1/2))+
   geom_line(size=1)+
   xlab("Hours Since Deployment")+
   ylab("Surviving")+
   theme_few()+
+  guides(alpha=FALSE)+
   theme(text = element_text(size=14))+
   ylim(0,1)+
   scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))
