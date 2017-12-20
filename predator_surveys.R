@@ -76,5 +76,3 @@ ggplot_aug_2017<-ggplot(aug_2017_plot, aes(variable, mean, fill=treatment)) +
 scale_y_continuous(expand = c(0, 0), limits = c(0, .9))
 ggplot_aug_2017  
 ggsave('predators_aug_2017.png', width=6, height=3)
-
-##### IS GITHUB WORKING FROM LAPTOP??#######try again###
