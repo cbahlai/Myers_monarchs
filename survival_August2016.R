@@ -48,9 +48,9 @@ step(result)
 ###make object data70 with only surviving at 70 hours
 data70<-data2[ which(data2$hours_since_deployment == "70"), ]
 ###do t-test comparing closed and sham
-t.test(data70$close,data70$sham, paired=TRUE)
+t.test(data70$close,data70$sham, paired=TRUE, "greater")
 ###t-test comparing open vs sham
-t.test(data70$surviving,data70$sham, paired=TRUE)
+t.test(data70$surviving,data70$sham, paired=TRUE, "greater")
 
 ##wilcox test of same
 wilcox.test(data70$close, data70$sham, paired=TRUE)
@@ -74,6 +74,7 @@ wilcox.test(data70$surviving, data70$sham, paired=TRUE)
 
 #load library(ddply) compute summary stats for plotting
 library(plyr)
+library(ggthemes)
 data2.summary<-ddply(data2, .(hours_since_deployment, treatment), summarize,
                             N=length(surviving),
                             mean=mean(surviving),

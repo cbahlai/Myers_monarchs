@@ -46,9 +46,9 @@ step(result)
 ###make object data71 with only surviving at 71 hours
 data71<-data2[ which(data2$hours_since_deployment == "71"), ]
 ###do t-test comparing closed and sham
-t.test(data71$close,data71$sham, paired=TRUE)
+t.test(data71$close,data71$sham, paired=TRUE, "greater")
 ###t-test comparing open vs sham
-t.test(data71$surviving,data71$sham, paired=TRUE)
+t.test(data71$surviving,data71$sham, paired=TRUE, "greater")
 
 ##wilcox test of same
 wilcox.test(data71$close, data71$sham, paired=TRUE)
