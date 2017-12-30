@@ -5,6 +5,7 @@ data<-read.csv(file="deployment2_2016_smooth_csv.csv", header=TRUE)
 #drop turf and post 72 hour obs
 data <- data[ which(data$hours_since_deployment < 73 & data$treatment != 'turf'), ]
 
+
 #make block into a factor
 data$block <- as.factor(data$block)
 
