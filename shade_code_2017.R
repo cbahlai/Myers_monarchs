@@ -38,13 +38,73 @@ summary(anova(result.nb, test="Rao"))
 #do holm-adjusted pairwise t-tests
 with(shade_data.avg, pairwise.t.test(monarch_eggs.sum, treatment, p.adjust.method="holm"))
 
+#want to do a power test
+#first have to caluclate effect size, ie cohen's d
+library(effsize)
+## this function requires making dataframes with only two treatment levels, below is every combo. trt 5 is missing because it was removed above
+data_trt_1.2=shade_data.avg[shade_data.avg$treatment == 'full sun'|shade_data.avg$treatment =='2/3 plants removed',]
+data_trt_1.3=shade_data.avg[shade_data.avg$treatment == 'full sun'|shade_data.avg$treatment =='1/3 plants removed',]
+data_trt_1.4=shade_data.avg[shade_data.avg$treatment == 'full sun'|shade_data.avg$treatment =='full shade',]
+data_trt_1.6=shade_data.avg[shade_data.avg$treatment == 'full sun'|shade_data.avg$treatment =='grass margin',]
+data_trt_2.3=shade_data.avg[shade_data.avg$treatment == '2/3 plants removed'|shade_data.avg$treatment =='1/3 plants removed',]
+data_trt_2.4=shade_data.avg[shade_data.avg$treatment == '2/3 plants removed'|shade_data.avg$treatment =='full shade',]
+data_trt_2.6=shade_data.avg[shade_data.avg$treatment == '2/3 plants removed'|shade_data.avg$treatment =='grass margin',]
+data_trt_3.4=shade_data.avg[shade_data.avg$treatment == '1/3 plants removed'|shade_data.avg$treatment =='full shade',]
+data_trt_3.6=shade_data.avg[shade_data.avg$treatment == '1/3 plants removed'|shade_data.avg$treatment =='grass margin',]
+data_trt_4.6=shade_data.avg[shade_data.avg$treatment == 'full shade'|shade_data.avg$treatment =='grass margin',]
 
-#summarize data for plotting
+##get rid of the unused levels
+data_trt_1.2$treatment=factor(data_trt_1.2$treatment)
+data_trt_1.3$treatment=factor(data_trt_1.3$treatment)
+data_trt_1.4$treatment=factor(data_trt_1.4$treatment)
+data_trt_1.6$treatment=factor(data_trt_1.6$treatment)
+data_trt_2.3$treatment=factor(data_trt_2.3$treatment)
+data_trt_2.4$treatment=factor(data_trt_2.4$treatment)
+data_trt_2.6$treatment=factor(data_trt_2.6$treatment)
+data_trt_3.4$treatment=factor(data_trt_3.4$treatment)
+data_trt_3.6$treatment=factor(data_trt_3.6$treatment)
+data_trt_4.6$treatment=factor(data_trt_4.6$treatment)
+
+#calculate cohen's d
+cohen.d(data_trt_1.2$monarch_eggs.sum, data_trt_1.2$treatment)
+cohen.d(data_trt_1.3$monarch_eggs.sum, data_trt_1.3$treatment)
+cohen.d(data_trt_1.4$monarch_eggs.sum, data_trt_1.4$treatment)
+cohen.d(data_trt_1.6$monarch_eggs.sum, data_trt_1.6$treatment)
+cohen.d(data_trt_2.3$monarch_eggs.sum, data_trt_2.3$treatment)
+cohen.d(data_trt_2.4$monarch_eggs.sum, data_trt_2.4$treatment)
+cohen.d(data_trt_2.6$monarch_eggs.sum, data_trt_2.6$treatment)
+cohen.d(data_trt_3.4$monarch_eggs.sum, data_trt_3.4$treatment)
+cohen.d(data_trt_3.6$monarch_eggs.sum, data_trt_3.6$treatment)
+cohen.d(data_trt_4.6$monarch_eggs.sum, data_trt_4.6$treatment)
+
+#now doing power test using above cohen's d and alpha = 0.05 and beta = 0.8
+library(pwr)
+pwr.t.test(d = -0.2220087, sig.level = 0.05, power =0.8 , type = c("paired"))
+pwr.t.test(d = -0.9933889, sig.level = 0.05, power =0.8 , type = c("paired"))
+pwr.t.test(d = -0.2906633, sig.level = 0.05, power =0.8 , type = c("paired"))
+pwr.t.test(d =  0.7035623, sig.level = 0.05, power =0.8 , type = c("paired"))
+pwr.t.test(d = -0.5486318, sig.level = 0.05, power =0.8 , type = c("paired"))
+pwr.t.test(d =  0.0701350, sig.level = 0.05, power =0.8 , type = c("paired"))
+pwr.t.test(d =  0.3370833, sig.level = 0.05, power =0.8 , type = c("paired"))
+pwr.t.test(d = -0.4295437, sig.level = 0.05, power =0.8 , type = c("paired"))
+pwr.t.test(d = -0.3478487, sig.level = 0.05, power =0.8 , type = c("paired"))
+pwr.t.test(d =  0.2341778, sig.level = 0.05, power =0.8 , type = c("paired"))
+
+# indicates I would need very large sample sizes
+
+
+
+
+
+
+#summarize data for plotting 
 shade_data.summary<-ddply(shade_data.avg, .(treatment), summarize,
                                N=length(monarch_eggs.sum),
                                mean=mean(monarch_eggs.sum/nplants),
                                sd   = sd(monarch_eggs.sum/nplants),
                                se   = sd / sqrt(N) )
+
+
 
 #load ggplot
 library(ggplot2)
@@ -93,6 +153,10 @@ ggsave("shade_experiment_cutcorn.png", width = 5, height = 3)
 
 
 
+
+
+
+##also collected hobo logger temp and humidity data at 2 sites (site 1 and Lux Arbor)
 
 ####### read in hobo_logger data
 hobo1.1<-read.csv(file="LandisLogger1_SITE1_TRT1.csv", header=TRUE)
