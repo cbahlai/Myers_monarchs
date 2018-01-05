@@ -222,11 +222,11 @@ ggplot(summary.melt, aes(x=hours_since_deployment, y=mean, fill=variable))+
   geom_point()+
   geom_ribbon(aes(ymin=mean-se, ymax=mean+se, alpha=1/2))+
   geom_line(size=1)+
-  xlab("Hours Since Deployment")+
-  ylab("Surviving")+
+  xlab("\nHours Since Deployment")+
+  ylab("Surviving\n")+
   theme_few()+
   guides(alpha=FALSE)+
   theme(text = element_text(size=14))+
   ylim(0,1)+
   scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))
-ggsave('ggplotsurvivalbyexclosureAugust2017.png', width=7, height=6)
+ggsave('ggplotsurvivalbyexclosureAugust2017.png', width=5, height=4)

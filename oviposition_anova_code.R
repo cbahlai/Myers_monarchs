@@ -370,13 +370,42 @@ ggplot(oviposition2017.summary, aes(x=treatment, y=mean, colour=treatment)) +
   scale_y_continuous(expand = c(0, 0), limits = c(0, .3))
   ggsave('faceted_ovipostion_2017.png', width = 7, height = 3)
 
+  
+  
+  
+  
 
-
-#Boxplot
-qplot(treatment, mean, data=oviposition2017.summary, geom=c("boxplot", "jitter"), 
-      fill=treatment, main="Mileage by Gear Number",
-      xlab="", ylab="mean eggs per stem")
-
-
-
+  #faceted bar charts with no colors
+  labels <- c("1" = "June", "2" = "July", "3" = "August") #make labeller
+  
+  ggplot(oviposition2016.summary, aes(x=treatment, y=mean)) + 
+    geom_bar(position=position_dodge(), stat="identity", size=1, fill="white", colour = "black") +
+    geom_errorbar(aes(ymin=mean-se, ymax=mean+se), colour="black", width=.2, position=position_dodge(.9)) +
+    theme(panel.background = element_blank(), axis.text.x = element_blank(),  axis.ticks = element_blank())+
+    facet_grid(~deployment, labeller=labeller(deployment = labels))+
+    ggtitle("Oviposition 2016")+
+    xlab("")+
+    ylab("Monarch eggs/stem/day\n")+
+    theme_few()+
+    scale_y_continuous(expand = c(0, 0), limits = c(0, .3))
+  ggsave('faceted_ovipostion_nocolor_2016.png', width = 7, height = 3)
+  
+  
+  
+  #for 2017
+  cols2017 <- c("firebrick1","gold2",  "yellowgreen", "mediumpurple" )
+  labels <- c("1" = "June", "2" = "July", "3" = "August") #make labeller
+  
+  ggplot(oviposition2017.summary, aes(x=treatment, y=mean, colour=treatment)) + 
+    geom_bar(position=position_dodge(), stat="identity", size=1, fill="white", colour = "black") +
+    geom_errorbar(aes(ymin=mean-se, ymax=mean+se), colour="black", width=.2, position=position_dodge(.9)) +
+    scale_color_manual(values=cols2017)+
+    theme(panel.background = element_blank(), axis.text.x = element_blank(),  axis.ticks = element_blank())+
+    facet_grid(~deployment, labeller=labeller(deployment = labels))+
+    ggtitle("Oviposition 2017")+
+    xlab("")+
+    ylab("Monarch eggs/stem/day\n")+
+    theme_few()+
+    scale_y_continuous(expand = c(0, 0), limits = c(0, .3))
+  ggsave('faceted_ovipostion_nocolor_2017.png', width = 7, height = 3)
 
