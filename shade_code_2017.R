@@ -27,19 +27,30 @@ shade_data.avg <-ddply(shade_data, .(date, treatment, site, canopy.cover), summa
                                              
 #load(pscl)                                                   
 library(pscl)
+library(MASS)
 #do a negative binomial glm
 result.nb<-glm.nb(monarch_eggs.sum ~ site + treatment + canopy.cover, offset(nplants), data=shade_data.avg)
 #get the summary
 summary(result.nb)
 #do an anova
-anova(result.nb, test="Rao")
+anova(result.nb, test="Rao")["treatment"]
 summary(anova(result.nb, test="Rao"))
 
 #do holm-adjusted pairwise t-tests
-with(shade_data.avg, pairwise.t.test(monarch_eggs.sum, treatment, p.adjust.method="holm"))
+t.tests<-with(shade_data.avg, pairwise.t.test(monarch_eggs.sum, treatment, p.adjust.method="holm"))
 
+#do power analysis on t tests
+library(pwr)
+#1/3 vs 2/3 removed
+pwr.t2n.test(n1 = 21, n2= 22, d = 0.548631, sig.level = 0.05,
+             alternative = c("two.sided"))
+#1/3 vs full shade
+0.440719
+
+#1/3 vs
 
 #summarize data for plotting
+library(plyr)
 shade_data.summary<-ddply(shade_data.avg, .(treatment), summarize,
                                N=length(monarch_eggs.sum),
                                mean=mean(monarch_eggs.sum/nplants),
@@ -48,6 +59,7 @@ shade_data.summary<-ddply(shade_data.avg, .(treatment), summarize,
 
 #load ggplot
 library(ggplot2)
+library(ggthemes)
 ggplot(shade_data.summary, aes(x=treatment, y=mean)) + 
   geom_bar(position=position_dodge(), stat="identity", size=.3, fill="cornflowerblue") +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=.2, position=position_dodge(.9)) +
