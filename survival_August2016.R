@@ -37,6 +37,23 @@ anova(result)
 step(result)
 
 
+###going to try the same with the gls function, because my random effect variable is correlated within subject
+
+library(nlme)
+
+result_gls <- gls(surviving~ hours_since_deployment * treatment, data=data2, correlation = corCAR1(form = ~ 1|block/treatment))
+summary(result_gls)
+
+anova(result_gls)
+step(result_gls)
+
+
+
+
+
+
+
+
 
 
 
@@ -234,4 +251,13 @@ ggplot(summary.melt, aes(x=hours_since_deployment, y=mean, fill=variable))+
   scale_x_continuous(expand = c(0, 0), limits = c(0, 75), breaks=c(0, 10, 20, 30, 40, 50, 60, 70))
 ggsave('ggplotsurvivalbyexclosureAug2016.png', width=5, height=4)
 
+
+
+
+
+##trying a lattice plot
+library(lattice)
+lattice<-xyplot(surviving ~ hours_since_deployment | block:treatment, data = data2, type = c("p", "r"),
+                main="August 2016") 
+lattice
 
