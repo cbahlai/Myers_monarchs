@@ -33,13 +33,13 @@ result.nb<-glm.nb(monarch_eggs.sum ~ site + treatment + canopy.cover, offset(npl
 #get the summary
 summary(result.nb)
 #do an anova
-anova(result.nb, test="Rao")["treatment"]
+anova(result.nb, test="Rao")
 summary(anova(result.nb, test="Rao"))
 
 #do holm-adjusted pairwise t-tests
 t.tests<-with(shade_data.avg, pairwise.t.test(monarch_eggs.sum, treatment, p.adjust.method="holm"))
 
-<<<<<<< HEAD
+
 #want to do a power test
 #first have to caluclate effect size, ie cohen's d
 library(effsize)
