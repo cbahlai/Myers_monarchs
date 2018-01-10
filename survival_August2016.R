@@ -5,16 +5,20 @@ data<-read.csv(file="deployment2_2016_smooth_csv.csv", header=TRUE)
 #drop turf and post 72 hour obs
 data <- data[ which(data$hours_since_deployment < 73 & data$treatment != 'turf'), ]
 
+
 #make block into a factor
 data$block <- as.factor(data$block)
 
 ##not using this code bit for 2016, because i did it in excel when smoothing: data$total<-rowSums(data[7:13])
 ####data$surviving<-data$total_all_stages/data$Initial_count
 
+
+
 library(reshape2)
 
 data1<-dcast(data, date+hours_since_deployment+block+treatment~exclosure_treatment, mean)
 data1$open<-NULL
+
 
 open.only<-data[which(data$exclosure_treatment=="open"),]
 open.only$exclosure_treatment<-NULL
@@ -24,10 +28,12 @@ data2<-merge(open.only, data1)
 
 library(lmerTest)
 
+
 #do the anova using lmer function
-result <- lmer(surviving~ hours_since_deployment * treatment + (1|block:treatment), data=data2)
+result <- lmer(surviving~ hours_since_deployment * treatment + (1|block:treatment) + closed, data=data2)
 result
 summary(result)
+
 
 #and an anova
 
@@ -35,12 +41,6 @@ anova(result)
 #analysis of random and fixed parts and post hoc
 #analysis of time and Treatment effects
 step(result)
-
-
-
-
-
-
 
 
 #####need to do a t-test comparing number surviving in closed vs sham and closed vs open
