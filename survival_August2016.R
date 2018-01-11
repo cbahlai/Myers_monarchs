@@ -9,8 +9,8 @@ data <- data[ which(data$hours_since_deployment < 73 & data$treatment != 'turf')
 #make block into a factor
 data$block <- as.factor(data$block)
 
-##not using this code bit for 2016, because i did it in excel when smoothing: data$total<-rowSums(data[7:13])
-####data$surviving<-data$total_all_stages/data$Initial_count
+##calculate proportion surviving
+data$surviving<-data$total_all_stages/data$Initial_count
 
 
 
