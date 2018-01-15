@@ -63,12 +63,12 @@ colMeans(fixef(o))
 
 
 m4.CI = data.frame(
-  x = rep(c('bare', 'corn', 'prairie', 'soy'),4),
+  x = rep(c('bare', 'corn', 'prairie', 'soy'), 3),
   exclosure_treatment = rep(c('closed', 'open', 'sham'), each=4),
   coefs = c(plogis( mean( o@fixef[,1] ) ), 
+            plogis( mean( o@fixef[,1] + o@fixef[,2] ) ),
             plogis( mean( o@fixef[,1] + o@fixef[,3] ) ),
             plogis( mean( o@fixef[,1] + o@fixef[,4] ) ),
-            plogis( mean( o@fixef[,1] + o@fixef[,2] ) ),
             plogis( mean( o@fixef[,1] + o@fixef[,2] + o@fixef[,3] + o@fixef[,5] ) ),
             plogis( mean( o@fixef[,1] + o@fixef[,2] + o@fixef[,4] + o@fixef[,6] ) )
   ),
