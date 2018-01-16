@@ -39,7 +39,7 @@ m4 = glmer(cbind(total_all_stages, initial_count) ~
 # check out AICc values (from pkg bbmle)
 AICctab(m0, m1)
 
-# Do plant treatments influence survival?
+# Do habitat treatments influence survival?
 anova(m0, m1)
 
 # Do exclosures treatments influence survival?
@@ -69,24 +69,43 @@ m4.CI = data.frame(
             plogis( mean( o@fixef[,1] + o@fixef[,2] ) ),
             plogis( mean( o@fixef[,1] + o@fixef[,3] ) ),
             plogis( mean( o@fixef[,1] + o@fixef[,4] ) ),
-            plogis( mean( o@fixef[,1] + o@fixef[,2] + o@fixef[,3] + o@fixef[,5] ) ),
-            plogis( mean( o@fixef[,1] + o@fixef[,2] + o@fixef[,4] + o@fixef[,6] ) )
+            plogis( mean( o@fixef[,1] + o@fixef[,5] ) ),
+            plogis( mean( o@fixef[,1] + o@fixef[,7] ) ),
+            plogis( mean( o@fixef[,1] + o@fixef[,8] ) ),
+            plogis( mean( o@fixef[,1] + o@fixef[,9] ) ),
+            plogis( mean( o@fixef[,1] + o@fixef[,6] ) ),
+            plogis( mean( o@fixef[,1] + o@fixef[,10]) ),
+            plogis( mean( o@fixef[,1] + o@fixef[,11]) ),
+            plogis( mean( o@fixef[,1] + o@fixef[,12]) )
   ),
   lower = c(plogis( quantile( o@fixef[,1], 0.025 ) ), 
-            plogis( quantile( o@fixef[,1] + o@fixef[,3], 0.025 ) ),
-            plogis( quantile( o@fixef[,1] + o@fixef[,4], 0.025 ) ),
-            plogis( quantile( o@fixef[,1] + o@fixef[,2], 0.025 ) ),
-            plogis( quantile( o@fixef[,1] + o@fixef[,2] + o@fixef[,3] + o@fixef[,5], 0.025 ) ),
-            plogis( quantile( o@fixef[,1] + o@fixef[,2] + o@fixef[,4] + o@fixef[,6], 0.025 ) )
+            plogis( quantile( o@fixef[,1] + o@fixef[,2], 0.025  ) ),
+            plogis( quantile( o@fixef[,1] + o@fixef[,3], 0.025  ) ),
+            plogis( quantile( o@fixef[,1] + o@fixef[,4], 0.025  ) ),
+            plogis( quantile( o@fixef[,1] + o@fixef[,5], 0.025  ) ),
+            plogis( quantile( o@fixef[,1] + o@fixef[,7], 0.025  ) ),
+            plogis( quantile( o@fixef[,1] + o@fixef[,8], 0.025  ) ),
+            plogis( quantile( o@fixef[,1] + o@fixef[,9], 0.025  ) ),
+            plogis( quantile( o@fixef[,1] + o@fixef[,6], 0.025  ) ),
+            plogis( quantile( o@fixef[,1] + o@fixef[,10], 0.025 ) ),
+            plogis( quantile( o@fixef[,1] + o@fixef[,11], 0.025 ) ),
+            plogis( quantile( o@fixef[,1] + o@fixef[,12], 0.025 ) )
   ),
   upper = c(plogis( quantile( o@fixef[,1], 0.975 ) ), 
-            plogis( quantile( o@fixef[,1] + o@fixef[,3], 0.975 ) ),
-            plogis( quantile( o@fixef[,1] + o@fixef[,4], 0.975 ) ),
-            plogis( quantile( o@fixef[,1] + o@fixef[,2], 0.975 ) ),
-            plogis( quantile( o@fixef[,1] + o@fixef[,2] + o@fixef[,3] + o@fixef[,5], 0.975 ) ),
-            plogis( quantile( o@fixef[,1] + o@fixef[,2] + o@fixef[,4] + o@fixef[,6], 0.975 ) )
+            plogis( quantile( o@fixef[,1] + o@fixef[,2], 0.975  ) ),
+            plogis( quantile( o@fixef[,1] + o@fixef[,3], 0.975  ) ),
+            plogis( quantile( o@fixef[,1] + o@fixef[,4], 0.975  ) ),
+            plogis( quantile( o@fixef[,1] + o@fixef[,5], 0.975  ) ),
+            plogis( quantile( o@fixef[,1] + o@fixef[,7], 0.975  ) ),
+            plogis( quantile( o@fixef[,1] + o@fixef[,8], 0.975  ) ),
+            plogis( quantile( o@fixef[,1] + o@fixef[,9], 0.975  ) ),
+            plogis( quantile( o@fixef[,1] + o@fixef[,6], 0.975  ) ),
+            plogis( quantile( o@fixef[,1] + o@fixef[,10], 0.975 ) ),
+            plogis( quantile( o@fixef[,1] + o@fixef[,11], 0.975 ) ),
+            plogis( quantile( o@fixef[,1] + o@fixef[,12], 0.975 ) )
   )
 )
+
 
 # effect sizes:
 (m4.CI$coefs[2]-m4.CI$coefs[1]) / m4.CI$coefs[1]
