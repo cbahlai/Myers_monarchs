@@ -20,25 +20,6 @@ oviposition2016.avg$date <- as.factor(oviposition2016.avg$date)
 oviposition2016.avg$time <- as.factor(oviposition2016.avg$time)
 oviposition2016.avg$deployment <- as.factor(oviposition2016.avg$deployment)
 
-#do the anova using glm function
-result <- glm(monarch_eggs.sum ~ block + treatment, offset=nplants, data=oviposition2016.avg)
-summary(result)
-aov(result)
-summary(aov(result))
-TukeyHSD(aov(result))
-
-#rerun anova with appropriate data as factors, with sum of eggs as response variable
-result_covariates <- glm(monarch_eggs.sum ~ block + treatment+deployment, offset=nplants, data=oviposition2016.avg)
-summary(result_covariates)
-anova(result_covariates) #use anova rather than AOV because it handles GLM better
-summary(anova(result_covariates))
-TukeyHSD(aov(result_covariates)) #Tukey only works with aov function
-#rerun this with poisson distribution
-result_covariates.poisson <- glm(monarch_eggs.sum ~ block + treatment+deployment, offset=log(nplants), data=oviposition2016.avg, family = "poisson")
-summary(result_covariates.poisson)
-anova(result_covariates.poisson, test="Rao")
-summary(anova(result_covariates.poisson, test="Rao"))
-#skip pairwise comparisons- do this only for NB model
 #Test fit with negative binomial model
 library(pscl)
 result_covariates.nb <- glm.nb(monarch_eggs.sum ~ block + treatment + deployment, offset =log(nplants), data=oviposition2016.avg)
@@ -138,9 +119,17 @@ ggplot(oviposition2016.summary, aes(x=treatment, y=mean, colour=treatment)) +
 
 
 
+
+
+
+
+
+
+
 #####for days with more than one egg check, doug wants me to add up all the eggs and divide by the 
 ######number of plants in the plot (or average if it changed). so redoing the former code from above to 
-### do this. also adding and doing the same for 2017
+### do this. also doing the same for 2017
+####USE BELOW FOR PAPER
 
 oviposition2016<-read.csv(file="oviposition2016.csv", header=TRUE) #read in oviposition2016 file
 oviposition2016<-na.omit(oviposition2016) #get rid of na's. There were several incidents when we were unable to count eggs (broken plants, plants were covered by exclosures, etc)
@@ -171,28 +160,9 @@ oviposition2016.avg.2$block <- as.factor(oviposition2016.avg.2$block)
 oviposition2016.avg.2$date <- as.factor(oviposition2016.avg.2$date)
 oviposition2016.avg.2$deployment <- as.factor(oviposition2016.avg.2$deployment)
 
-#do the anova using glm function
-result <- glm(monarch_eggs.sum ~ block + treatment, offset=nplants, data=oviposition2016.avg)
-summary(result)
-aov(result)
-summary(aov(result))
-TukeyHSD(aov(result))
-
-#rerun anova with appropriate data as factors, with sum of eggs as response variable
-result_covariates <- glm(monarch_eggs.sum ~ block + treatment+deployment, offset=nplants, data=oviposition2016.avg)
-summary(result_covariates)
-anova(result_covariates) #use anova rather than AOV because it handles GLM better
-summary(anova(result_covariates))
-TukeyHSD(aov(result_covariates)) #Tukey only works with aov function
-#rerun this with poisson distribution
-result_covariates.poisson <- glm(monarch_eggs.sum ~ block + treatment+deployment, offset=log(nplants), data=oviposition2016.avg, family = "poisson")
-summary(result_covariates.poisson)
-anova(result_covariates.poisson, test="Rao")
-summary(anova(result_covariates.poisson, test="Rao"))
-#skip pairwise comparisons- do this only for NB model
 #Test fit with negative binomial model
 library(pscl)
-result_covariates.nb <- glm.nb(monarch_eggs.sum ~ block + treatment + deployment, offset=log(nplants), data=oviposition2016.avg)
+result_covariates.nb <- glm.nb(monarch_eggs.sum ~ block + treatment + deployment, offset=log(nplants.mean), data=oviposition2016.avg.2)
 summary(result_covariates.nb)
 anova(result_covariates.nb, test="Rao")
 summary(anova(result_covariates.nb, test="Rao"))
@@ -220,6 +190,7 @@ oviposition2016.summary.overall<-ddply(oviposition2016.avg.2, .(treatment), summ
 
 #make a bar plot with ggplot
 library(ggplot2)
+library(ggthemes)
 # Error bars represent standard error of the mean
 #cols is my personalized colour palette. it doesn't seem to work any more
 
@@ -230,6 +201,13 @@ ggplot(oviposition2016.summary.overall, aes(x=treatment, y=mean, colour=treatmen
   scale_color_manual(values=cols)+
   ylim(0,.1)+
   theme(panel.background = element_blank(), text = element_text(size=20, colour = "black"), complete=FALSE)
+
+
+
+
+
+
+
 
 
 
@@ -263,26 +241,8 @@ oviposition2017.avg.2$block <- as.factor(oviposition2017.avg.2$block)
 oviposition2017.avg.2$date <- as.factor(oviposition2017.avg.2$date)
 oviposition2017.avg.2$deployment <- as.factor(oviposition2017.avg.2$deployment)
 
-#do the anova using glm function
-result <- glm(monarch_eggs.sum ~ block + treatment, offset=nplants, data=oviposition2017.avg.2)
-summary(result)
-aov(result)
-summary(aov(result))
-TukeyHSD(aov(result))
 
-#rerun anova with appropriate data as factors, with sum of eggs as response variable
-result_covariates <- glm(monarch_eggs.sum ~ block + treatment + deployment, offset=nplants, data=oviposition2017.avg.2)
-summary(result_covariates)
-anova(result_covariates) #use anova rather than AOV because it handles GLM better
-summary(anova(result_covariates))
-TukeyHSD(aov(result_covariates)) #Tukey only works with aov function
-#rerun this with poisson distribution
-result_covariates.poisson <- glm(monarch_eggs.sum ~ block + treatment+deployment, offset=log(nplants.mean), data=oviposition2017.avg.2, family = "poisson")
-summary(result_covariates.poisson)
-anova(result_covariates.poisson, test="Rao")
-summary(anova(result_covariates.poisson, test="Rao"))
-#skip pairwise comparisons- do this only for NB model
-#Test fit with negative binomial model
+#do negative binomial model
 library(pscl)
 result_covariates.nb <- glm.nb(monarch_eggs.sum ~ block + treatment + deployment, offset(log(nplants.mean)), data=oviposition2017.avg.2)
 summary(result_covariates.nb)
@@ -314,6 +274,7 @@ oviposition2017.summary.overall<-ddply(oviposition2017.avg.2, .(treatment), summ
 
 #make a bar plot with ggplot
 library(ggplot2)
+library(ggthemes)
 # Error bars represent standard error of the mean
 #cols is my personalized colour palette. i can't get it to work any more, so i took out the argument
 
