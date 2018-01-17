@@ -28,19 +28,19 @@ data_aug2016_3day <- data_aug2016[ which(data_aug2016$hours_since_deployment == 
 #####day3 survival###### eggs and caterpillars coming back to life not corrected#######
 
 m0 = glmer(cbind(total_all_stages, initial_count) ~
-             1 + (1|patch), family=binomial(), data=data_aug2016_3day)
+             1 + (1|block), family=binomial(), data=data_aug2016_3day)
 
 m1 = glmer(cbind(total_all_stages, initial_count) ~
-             treatment + (1|patch), family=binomial(), data=data_aug2016_3day)
+             treatment + (1|block), family=binomial(), data=data_aug2016_3day)
 
 m2 = glmer(cbind(total_all_stages, initial_count) ~
-             exclosure_treatment + (1|patch), family=binomial(), data=data_aug2016_3day)
+             exclosure_treatment + (1|block), family=binomial(), data=data_aug2016_3day)
 
 m3 = glmer(cbind(total_all_stages, initial_count) ~
-             treatment + exclosure_treatment + (1|patch), family=binomial(), data=data_aug2016_3day)
+             treatment + exclosure_treatment + (1|block), family=binomial(), data=data_aug2016_3day)
 
 m4 = glmer(cbind(total_all_stages, initial_count) ~
-             treatment*exclosure_treatment + (1|patch), family=binomial(), data=data_aug2016_3day)
+             treatment*exclosure_treatment + (1|block), family=binomial(), data=data_aug2016_3day)
 
 # check out AICc values (from pkg bbmle)
 AICctab(m0, m1)
@@ -163,19 +163,19 @@ data_july2017_3day <- data_july2017[ which(data_july2017$hours_since_deployment 
 #####day3 survival###### eggs and caterpillars coming back to life not corrected#######
 
 m0.july2017 = glmer(cbind(total_all_stages, initial_count) ~
-             1 + (1|patch), family=binomial(), data=data_july2017_3day)
+             1 + (1|block), family=binomial(), data=data_july2017_3day)
 
 m1.july2017 = glmer(cbind(total_all_stages, initial_count) ~
-             treatment + (1|patch), family=binomial(), data=data_july2017_3day)
+             treatment + (1|block), family=binomial(), data=data_july2017_3day)
 
 m2.july2017 = glmer(cbind(total_all_stages, initial_count) ~
-             exclosure_treatment + (1|patch), family=binomial(), data=data_july2017_3day)
+             exclosure_treatment + (1|block), family=binomial(), data=data_july2017_3day)
 
 m3.july2017 = glmer(cbind(total_all_stages, initial_count) ~
-             treatment + exclosure_treatment + (1|patch), family=binomial(), data=data_july2017_3day)
+             treatment + exclosure_treatment + (1|block), family=binomial(), data=data_july2017_3day)
 
 m4.july2017 = glmer(cbind(total_all_stages, initial_count) ~
-             treatment*exclosure_treatment + (1|patch), family=binomial(), data=data_july2017_3day)
+             treatment*exclosure_treatment + (1|block), family=binomial(), data=data_july2017_3day)
 
 # check out AICc values (from pkg bbmle)
 AICctab(m0.july2017, m1.july2017)
@@ -286,19 +286,19 @@ data_aug2017_3day <- data_aug2017[ which(data_aug2017$hours_since_deployment == 
 #####day3 survival###### eggs and caterpillars coming back to life not corrected#######
 
 m0.aug2017 = glmer(cbind(total_all_stages, initial_count) ~
-                      1 + (1|patch), family=binomial(), data=data_aug2017_3day)
+                      1 + (1|block), family=binomial(), data=data_aug2017_3day)
 
 m1.aug2017 = glmer(cbind(total_all_stages, initial_count) ~
-                      treatment + (1|patch), family=binomial(), data=data_aug2017_3day)
+                      treatment + (1|block), family=binomial(), data=data_aug2017_3day)
 
 m2.aug2017 = glmer(cbind(total_all_stages, initial_count) ~
-                      exclosure_treatment + (1|patch), family=binomial(), data=data_aug2017_3day)
+                      exclosure_treatment + (1|block), family=binomial(), data=data_aug2017_3day)
 
 m3.aug2017 = glmer(cbind(total_all_stages, initial_count) ~
-                      treatment + exclosure_treatment + (1|patch), family=binomial(), data=data_aug2017_3day)
+                      treatment + exclosure_treatment + (1|block), family=binomial(), data=data_aug2017_3day)
 
 m4.aug2017 = glmer(cbind(total_all_stages, initial_count) ~
-                      treatment*exclosure_treatment + (1|patch), family=binomial(), data=data_aug2017_3day)
+                      treatment*exclosure_treatment + (1|block), family=binomial(), data=data_aug2017_3day)
 
 # check out AICc values (from pkg bbmle)
 AICctab(m0.aug2017, m1.aug2017)
