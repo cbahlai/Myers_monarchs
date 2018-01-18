@@ -43,6 +43,13 @@ oviposition2016.summary.overall<-ddply(oviposition2016.avg, .(treatment), summar
                                    sd   = sd(monarch_eggs.mean),
                                    se   = sd / sqrt(N) )
 
+#this one doesn't include treatment
+oviposition2016.summary.by.deployment<- ddply(oviposition2016.avg, .(deployment), summarize,
+                                              N=length(monarch_eggs.mean),
+                                              mean=mean(monarch_eggs.mean),
+                                              sd   = sd(monarch_eggs.mean),
+                                              se   = sd / sqrt(N) )
+
 #make a bar plot with ggplot
 library(ggplot2)
 # Error bars represent standard error of the mean
@@ -160,9 +167,9 @@ oviposition2016.avg.2$block <- as.factor(oviposition2016.avg.2$block)
 oviposition2016.avg.2$date <- as.factor(oviposition2016.avg.2$date)
 oviposition2016.avg.2$deployment <- as.factor(oviposition2016.avg.2$deployment)
 
-#Test fit with negative binomial model
-library(pscl)
-result_covariates.nb <- glm.nb(monarch_eggs.sum ~ block + treatment + deployment, offset=log(nplants.mean), data=oviposition2016.avg.2)
+#negative binomial model fit
+library(lme4)
+result_covariates.nb <- glmer.nb(monarch_eggs.sum ~ block + treatment + deployment + (1|block/treatment), offset=log(nplants.mean), data=oviposition2016.avg.2)
 summary(result_covariates.nb)
 anova(result_covariates.nb, test="Rao")
 summary(anova(result_covariates.nb, test="Rao"))
@@ -370,3 +377,14 @@ ggplot(oviposition2017.summary, aes(x=treatment, y=mean, colour=treatment)) +
     scale_y_continuous(expand = c(0, 0), limits = c(0, .3))
   ggsave('faceted_ovipostion_nocolor_2017.png', width = 7, height = 3)
 
+  
+  
+  
+  
+  
+  
+  
+  ###working on summary stats for paper
+  mean.by.deployment <
+  
+  
