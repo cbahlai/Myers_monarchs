@@ -203,6 +203,29 @@ ggplot(oviposition2016.summary.overall, aes(x=treatment, y=mean, colour=treatmen
   theme(panel.background = element_blank(), text = element_text(size=20, colour = "black"), complete=FALSE)
 
 
+#####making table for manuscript
+library(plotrix)
+#treat each date measurement of eggs per stem as a subsample and average across dates to get a grand mean
+table2016.1 <-ddply(oviposition2016.avg.2, .(treatment, deployment, block), summarize, grand.mean=mean(monarch_eggs.mean))
+#now average within deployment. n = 16, beacuse there are 16 plots per deployment
+table2016.2 <-ddply(table2016.1, .(deployment), summarize, mean=mean(grand.mean), sem=std.error(grand.mean, na.rm))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -286,6 +309,12 @@ ggplot(oviposition2017.summary.overall, aes(x=treatment, y=mean, colour=treatmen
   scale_color_manual(values=cols2017)+
   theme(panel.background = element_blank(), text = element_text(size=20, colour = "black"), complete=FALSE)
 
+#####making table for manuscript
+library(plotrix)
+#treat each date measurement of eggs per stem as a subsample and average across dates to get a grand mean
+table2017.1 <-ddply(oviposition2017.avg.2, .(treatment, deployment, block), summarize, grand.mean=mean(monarch_eggs.mean))
+#now average within deployment. n = 16, beacuse there are 16 plots per deployment
+table2017.2 <-ddply(table2017.1, .(deployment), summarize, mean=mean(grand.mean), sem=std.error(grand.mean, na.rm))
 
 
 

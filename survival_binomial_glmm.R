@@ -1,4 +1,4 @@
-install.packages("glmmADMB")
+
 install.packages("bbmle")
 install.packages("arm")
 install.packages("lme4")
@@ -126,7 +126,7 @@ fig1a = ggplot(data_aug2016_3day, aes(x = treatment, y = total_all_stages/initia
   labs(x = 'habitat treatment', y = 'survival') +
   geom_pointrange(data=m4.CI, aes(x = x, y = coefs, ymin=lower, ymax=upper),
   col = 1, size=0.5, alpha=1) 
-
+ggsave('surv.bin.aug2016.png', width=8, height=4)
 fig1a
 
 
@@ -260,7 +260,7 @@ fig1july2017 = ggplot(data_july2017_3day, aes(x = treatment, y = total_all_stage
   labs(x = 'habitat treatment', y = 'survival') +
   geom_pointrange(data=m4.july2017.CI, aes(x = x, y = coefs, ymin=lower, ymax=upper),
                      col = 1, size=0.5, alpha=1) 
-
+ggsave('surv.bin.july2017.png', width=8, height=4)
 
 fig1july2017
 
@@ -394,6 +394,7 @@ fig1aug2017 = ggplot(data_aug2017_3day, aes(x = treatment, y = total_all_stages/
   geom_pointrange(data=m4.aug2017.CI, aes(x = x, y = coefs, ymin=lower, ymax=upper),
                   col = 1, size=0.5, alpha=1) 
 
+ggsave('surv.bin.aug2017.png', width=8, height=4)
 
 fig1aug2017
 
