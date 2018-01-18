@@ -6,7 +6,6 @@ install.packages("piecewiseSEM")
 install.packages("ggplot2")
 
 # Load packages
-library(glmmADMB)
 library(bbmle)
 library(arm)
 library(lme4)
@@ -264,6 +263,16 @@ fig1july2017 = ggplot(data_july2017_3day, aes(x = treatment, y = total_all_stage
 
 
 fig1july2017
+
+
+
+
+
+
+
+
+
+
 
 
 
