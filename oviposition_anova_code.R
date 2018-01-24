@@ -8,6 +8,7 @@ oviposition2016<-na.omit(oviposition2016) #get rid of na's. There were several i
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 #drop the turf treatment
 <<<<<<< HEAD
 oviposition2016.avg<-oviposition2016.avg[ which(oviposition2016.avg$treatment != 'turf'), ]
@@ -135,6 +136,8 @@ ggplot(oviposition2016.summary, aes(x=treatment, y=mean, colour=treatment)) +
 oviposition2016<-oviposition2016[ which(oviposition2016$treatment != 'turf'), ]
 >>>>>>> ba43f0114414b7284cea1fe5bb65852829720908
 
+=======
+>>>>>>> parent of ba43f01... saving
 =======
 >>>>>>> parent of ba43f01... saving
 =======
@@ -384,6 +387,7 @@ ggplot(oviposition2017.summary, aes(x=treatment, y=mean, colour=treatment)) +
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   
   ggplot(oviposition2016.summary, aes(x=treatment, y=mean)) + 
     geom_bar(position=position_dodge(), stat="identity", size=1, fill="white", colour = "black") +
@@ -433,6 +437,8 @@ ggplot(oviposition2017.summary, aes(x=treatment, y=mean, colour=treatment)) +
 >>>>>>> parent of ba43f01... saving
 =======
 >>>>>>> parent of ba43f01... saving
+=======
+>>>>>>> parent of ba43f01... saving
   
   ggplot(oviposition2016.summary, aes(x=treatment, y=mean)) + 
     geom_bar(position=position_dodge(), stat="identity", size=1, fill="white", colour = "black") +
@@ -458,6 +464,7 @@ ggplot(oviposition2017.summary, aes(x=treatment, y=mean, colour=treatment)) +
   cols2017 <- c("firebrick1","gold2",  "yellowgreen", "mediumpurple" )
   labels <- c("1" = "June", "2" = "July", "3" = "August") #make labeller
   
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -491,6 +498,8 @@ ggplot(oviposition2017.summary, aes(x=treatment, y=mean, colour=treatment)) +
 >>>>>>> parent of ba43f01... saving
 =======
 >>>>>>> parent of ba43f01... saving
+=======
+>>>>>>> parent of ba43f01... saving
   ggplot(oviposition2017.summary, aes(x=treatment, y=mean, colour=treatment)) + 
     geom_bar(position=position_dodge(), stat="identity", size=1, fill="white", colour = "black") +
     geom_errorbar(aes(ymin=mean-se, ymax=mean+se), colour="black", width=.2, position=position_dodge(.9)) +
@@ -507,6 +516,9 @@ ggplot(oviposition2017.summary, aes(x=treatment, y=mean, colour=treatment)) +
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of ba43f01... saving
+=======
 >>>>>>> parent of ba43f01... saving
 =======
 >>>>>>> parent of ba43f01... saving
