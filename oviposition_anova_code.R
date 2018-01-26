@@ -1,8 +1,3 @@
-###testing something
-
-
-
-
 
 #read in 2016 data
 oviposition2016<-read.csv(file="oviposition2016.csv", header=TRUE) #read in oviposition2016 file
@@ -32,38 +27,73 @@ oviposition2016.avg.2 <-ddply(oviposition2016.avg.2, .(treatment, date, block, d
                               monarch_eggs.per.plant=monarch_eggs.sum/nplants.mean)
 
 
-#then, repeating as above, make block, date, deployment into factors (but not time this time)
+##average across all dates, treating each date like a subsample, calculate the number of plant checks, sum all eggs found#####
+oviposition2016.avg.3<-ddply(oviposition2016.avg.2, .(treatment, block), summarize,
+                             monarch_eggs.mean=mean(monarch_eggs.per.plant),
+                             nplants.checks = (sum(nplants.mean)),
+                             monarch_eggs.sum = sum(monarch_eggs.sum),
+                             days.checked = length(treatment))
+
+
+
+
+
+
+#make block, date, deployment into factors (but not time this time)
 oviposition2016.avg.2$block <- as.factor(oviposition2016.avg.2$block)
 oviposition2016.avg.2$date <- as.factor(oviposition2016.avg.2$date)
 oviposition2016.avg.2$deployment <- as.factor(oviposition2016.avg.2$deployment)
 
-#Test fit with negative binomial model
+
+
+#Negative binomial model
 library(pscl)
-result_covariates.nb <- glm.nb(monarch_eggs.sum ~ block + treatment + deployment, offset=log(nplants.mean), data=oviposition2016.avg.2)
-summary(result_covariates.nb)
-anova(result_covariates.nb, test="Rao")
-summary(anova(result_covariates.nb, test="Rao"))
+library(MASS)
+library(lme4)
+nb.m1 <- glm.nb(monarch_eggs.sum ~ treatment + block + offset(log(nplants.checks)), data=oviposition2016.avg.3)
+summary(nb.m1)
+anova(nb.m1, test="Rao")
+summary(anova(nb.m1, test="Rao"))
+
 #need a holm-adjusted t-test here because Tukey doesn't work with NB models
-with(oviposition2016.avg, pairwise.t.test(monarch_eggs.sum, treatment, p.adjust.method="holm"))
+with(oviposition2016.avg.3, pairwise.t.test(monarch_eggs.sum, treatment, p.adjust.method="holm"))
+
+##make null model without treatment
+nb.m2 <- glm.nb(monarch_eggs.sum ~ block + offset(log(nplants.checks)), data=oviposition2016.avg.3)
+nb.m3 <- glm.nb(monarch_eggs.sum ~ 1, data=oviposition2016.avg.3)
+##ANOVA comparing models
+anova(nb.m1, nb.m2)
+
+library(bbmle)
+AICctab(nb.m1, nb.m2, nb.m3)
+
+library(MuMIn)
+dredge(glm.nb(monarch_eggs.sum ~ treatment + block, data=oviposition2016.avg.3, na.action = na.fail),
+       rank = AIC)
+
+
 
 ###doing more summary stats for plotting###
-library(plyr)
 library(plotrix)
-#first need to average across all dates, treating each date like a subsample#####
-oviposition2016.avg.3<-ddply(oviposition2016.avg.2, .(treatment, deployment, block), summarize,
-                               monarch_eggs.mean=mean(monarch_eggs.per.plant))
 
 ##next we can calculate the grand mean and SEM for each treatment##
-oviposition2016.summary<-ddply(oviposition2016.avg.3, .(treatment), summarize,
-                                 grand.mean=mean(monarch_eggs.mean),
-                                 n=length(deployment),
-                                 se = std.error(monarch_eggs.mean, na.rm))
+oviposition2016.summary<-ddply(oviposition2016.avg.2, .(treatment), summarize,
+                                 grand.mean=mean(monarch_eggs.per.plant),
+                                 n=length(treatment),
+                                 se = std.error(monarch_eggs.per.plant, na.rm))
 
-#this one includes deployment number for faceting ggplot
-oviposition2016.summary.2<-ddply(oviposition2016.avg.3, .(treatment, deployment), summarize,
-                               grand.mean=mean(monarch_eggs.mean),
+#here, want to calculate separate means for each deployment to make the faceted bar plot
+#first average across dates, so no just means for each deployment we have an average valuce for each block and treatment
+#essentially doing the same that we did above for the analysis but retained deployment number
+oviposition2016.summary.2<-ddply(oviposition2016.avg.2, .(block, treatment, deployment), summarize,
+                              mean.monarch_eggs.per.plant=mean(monarch_eggs.per.plant),
                                n=length(deployment),
-                               se = std.error(monarch_eggs.mean, na.rm))
+                               se = std.error(monarch_eggs.per.plant, na.rm))
+#next, average across block so that we have appropriate  n=4 blocks and a mean for each treatment within each deployment
+oviposition2016.summary.3<-ddply(oviposition2016.avg.2, .(treatment, deployment), summarize,
+                                 grand.mean=mean(monarch_eggs.per.plant),
+                                 n=length(deployment),
+                                 se = std.error(monarch_eggs.per.plant, na.rm))
 
 
 #make a bar plot with ggplot
@@ -71,7 +101,7 @@ library(ggplot2)
 library(ggthemes)
 # Error bars represent standard error of the mean
 labels <- c("1" = "June", "2" = "July", "3" = "August") #make labeller
-ggplot(oviposition2016.summary.2, aes(x=treatment, y=grand.mean)) + 
+ggplot(oviposition2016.summary.3, aes(x=treatment, y=grand.mean)) + 
   geom_bar(position=position_dodge(), stat="identity", size=1, fill="white", colour = "black") +
   geom_errorbar(aes(ymin=grand.mean-se, ymax=grand.mean+se), colour="black", width=.2, position=position_dodge(.9)) +
   theme(panel.background = element_blank(), axis.text.x = element_blank(),  axis.ticks = element_blank())+
@@ -82,6 +112,22 @@ ggplot(oviposition2016.summary.2, aes(x=treatment, y=grand.mean)) +
   theme_few()+
   scale_y_continuous(expand = c(0, 0), limits = c(0, .4))
 ggsave('faceted_ovipostion_nocolor_2016.png', width = 7, height = 3)
+
+
+
+#also want a bar plot combining all deployments
+library(ggplot2)
+library(ggthemes)
+ggplot(oviposition2016.summary, aes(x=treatment, y=grand.mean)) + 
+  geom_bar(position=position_dodge(), stat="identity", size=1, fill="white", colour = "black") +
+  geom_errorbar(aes(ymin=grand.mean-se, ymax=grand.mean+se), colour="black", width=.2, position=position_dodge(.9)) +
+  theme(panel.background = element_blank(), axis.text.x = element_blank(),  axis.ticks = element_blank())+
+  ggtitle("Oviposition 2016")+
+  xlab("")+
+  ylab("Monarch eggs/stem/day\n")+
+  theme_few()+
+  scale_y_continuous(expand = c(0, 0), limits = c(0, .1))
+ggsave('ovipostion_nocolor_2016.png', width = 7, height = 3)
 
 
 
@@ -119,7 +165,6 @@ table2016.2 <-ddply(table2016.1, .(deployment), summarize, mean=mean(grand.mean)
 
 
 ###################OK! trying the above for 2017 
-
 #read in 2017 data
 oviposition2017<-read.csv(file="oviposition2017.csv", header=TRUE) #read in oviposition2017 file
 oviposition2017<-na.omit(oviposition2017) #get rid of na's. There were several incidents when we were unable to count eggs (broken plants, plants were covered by exclosures, etc)
@@ -148,46 +193,81 @@ oviposition2017.avg.2 <-ddply(oviposition2017.avg.2, .(treatment, date, block, d
                               monarch_eggs.per.plant=monarch_eggs.sum/nplants.mean)
 
 
-#then, repeating as above, make block, date, deployment into factors (but not time this time)
+##average across all dates, treating each date like a subsample, calculate the number of plant checks, sum all eggs found#####
+oviposition2017.avg.3<-ddply(oviposition2017.avg.2, .(treatment, block), summarize,
+                             monarch_eggs.mean=mean(monarch_eggs.per.plant),
+                             nplants.checks = (sum(nplants.mean)),
+                             monarch_eggs.sum = sum(monarch_eggs.sum),
+                             days.checked = length(treatment))
+
+
+
+
+
+
+#make block, date, deployment into factors (but not time this time)
 oviposition2017.avg.2$block <- as.factor(oviposition2017.avg.2$block)
 oviposition2017.avg.2$date <- as.factor(oviposition2017.avg.2$date)
 oviposition2017.avg.2$deployment <- as.factor(oviposition2017.avg.2$deployment)
 
-#Test fit with negative binomial model
+
+
+#Negative binomial model
 library(pscl)
-result_covariates.nb <- glm.nb(monarch_eggs.sum ~ block + treatment + deployment, offset=log(nplants.mean), data=oviposition2017.avg.2)
-summary(result_covariates.nb)
-anova(result_covariates.nb, test="Rao")
-summary(anova(result_covariates.nb, test="Rao"))
+library(MASS)
+library(lme4)
+nb.m1 <- glm.nb(monarch_eggs.sum ~ treatment + block + offset(log(nplants.checks)), data=oviposition2017.avg.3)
+summary(nb.m1)
+anova(nb.m1, test="Rao")
+summary(anova(nb.m1, test="Rao"))
+
 #need a holm-adjusted t-test here because Tukey doesn't work with NB models
-with(oviposition2017.avg, pairwise.t.test(monarch_eggs.sum, treatment, p.adjust.method="holm"))
+with(oviposition2017.avg.3, pairwise.t.test(monarch_eggs.sum, treatment, p.adjust.method="holm"))
+
+##make null model without treatment
+nb.m2 <- glm.nb(monarch_eggs.sum ~ block + offset(log(nplants.checks)), data=oviposition2017.avg.3)
+nb.m3 <- glm.nb(monarch_eggs.sum ~ 1, data=oviposition2017.avg.3)
+##ANOVA comparing models
+anova(nb.m1, nb.m2)
+
+library(bbmle)
+AICctab(nb.m1, nb.m2, nb.m3)
+
+library(MuMIn)
+dredge(glm.nb(monarch_eggs.sum ~ treatment + block, data=oviposition2017.avg.3, na.action = na.fail),
+       rank = AIC)
+
+
 
 ###doing more summary stats for plotting###
-library(plyr)
 library(plotrix)
-#first need to average across all dates, treating each date like a subsample#####
-oviposition2017.avg.3<-ddply(oviposition2017.avg.2, .(treatment, deployment, block), summarize,
-                             monarch_eggs.mean=mean(monarch_eggs.per.plant))
 
 ##next we can calculate the grand mean and SEM for each treatment##
-oviposition2017.summary<-ddply(oviposition2017.avg.3, .(treatment), summarize,
-                               grand.mean=mean(monarch_eggs.mean),
-                               n=length(deployment),
-                               se = std.error(monarch_eggs.mean, na.rm))
+oviposition2017.summary<-ddply(oviposition2017.avg.2, .(treatment), summarize,
+                               grand.mean=mean(monarch_eggs.per.plant),
+                               n=length(treatment),
+                               se = std.error(monarch_eggs.per.plant, na.rm))
 
-#this one includes deployment number for faceting ggplot
-oviposition2017.summary.2<-ddply(oviposition2017.avg.3, .(treatment, deployment), summarize,
-                                 grand.mean=mean(monarch_eggs.mean),
+#here, want to calculate separate means for each deployment to make the faceted bar plot
+#first average across dates, so no just means for each deployment we have an average valuce for each block and treatment
+#essentially doing the same that we did above for the analysis but retained deployment number
+oviposition2017.summary.2<-ddply(oviposition2017.avg.2, .(block, treatment, deployment), summarize,
+                                 mean.monarch_eggs.per.plant=mean(monarch_eggs.per.plant),
                                  n=length(deployment),
-                                 se = std.error(monarch_eggs.mean, na.rm))
+                                 se = std.error(monarch_eggs.per.plant, na.rm))
+#next, average across block so that we have appropriate  n=4 blocks and a mean for each treatment within each deployment
+oviposition2017.summary.3<-ddply(oviposition2017.avg.2, .(treatment, deployment), summarize,
+                                 grand.mean=mean(monarch_eggs.per.plant),
+                                 n=length(deployment),
+                                 se = std.error(monarch_eggs.per.plant, na.rm))
 
 
 #make a bar plot with ggplot
 library(ggplot2)
 library(ggthemes)
-labels <- c("1" = "June", "2" = "July", "3" = "August") #make labeller
 # Error bars represent standard error of the mean
-ggplot(oviposition2017.summary.2, aes(x=treatment, y=grand.mean)) + 
+labels <- c("1" = "June", "2" = "July", "3" = "August") #make labeller
+ggplot(oviposition2017.summary.3, aes(x=treatment, y=grand.mean)) + 
   geom_bar(position=position_dodge(), stat="identity", size=1, fill="white", colour = "black") +
   geom_errorbar(aes(ymin=grand.mean-se, ymax=grand.mean+se), colour="black", width=.2, position=position_dodge(.9)) +
   theme(panel.background = element_blank(), axis.text.x = element_blank(),  axis.ticks = element_blank())+
@@ -201,51 +281,20 @@ ggsave('faceted_ovipostion_nocolor_2017.png', width = 7, height = 3)
 
 
 
-
-
-
-
-
-#####making table for manuscript
-library(plotrix)
-#treat each date measurement of eggs per stem as a subsample and average across dates to get a grand mean
-table2017.1 <-ddply(oviposition2017.avg.2, .(treatment, deployment, block), summarize, grand.mean=mean(monarch_eggs.mean))
-#now average within deployment. n = 16, beacuse there are 16 plots per deployment
-table2017.2 <-ddply(table2017.1, .(deployment), summarize, mean=mean(grand.mean), sem=std.error(grand.mean, na.rm))
-
-
-
-
-
-
-
-
-###### having trouble doing the color faceted plot again
-
-
-#for 2017
-cols2017 <- c("firebrick1","gold2",  "yellowgreen", "mediumpurple" )
-labels <- c("1" = "June", "2" = "July", "3" = "August") #make labeller
-
-ggplot(oviposition2017.summary.2, aes(x=treatment, y=grand.mean, colour=treatment)) + 
-  geom_bar(position=position_dodge(), stat="identity", size=.3, fill=cols2017) +
+#also want a bar plot combining all deployments
+library(ggplot2)
+library(ggthemes)
+ggplot(oviposition2017.summary, aes(x=treatment, y=grand.mean)) + 
+  geom_bar(position=position_dodge(), stat="identity", size=1, fill="white", colour = "black") +
   geom_errorbar(aes(ymin=grand.mean-se, ymax=grand.mean+se), colour="black", width=.2, position=position_dodge(.9)) +
-  scale_color_manual(values=cols2017)+
   theme(panel.background = element_blank(), axis.text.x = element_blank(),  axis.ticks = element_blank())+
-  facet_grid(~deployment, labeller=labeller(deployment = labels))+
+  ggtitle("Oviposition 2017")+
   xlab("")+
-  ylab("")+
+  ylab("Monarch eggs/stem/day\n")+
   theme_few()+
-  scale_y_continuous(expand = c(0, 0), limits = c(0, .3))
-  ggsave('faceted_ovipostion_2017.png', width = 7, height = 3)
+  scale_y_continuous(expand = c(0, 0), limits = c(0, .1))
+ggsave('ovipostion_nocolor_2017.png', width = 7, height = 3)
 
-  
-  
-  
-  
-
-
-  
   
   
   
